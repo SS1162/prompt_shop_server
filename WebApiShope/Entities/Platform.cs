@@ -7,7 +7,7 @@ namespace Entities;
 
 public partial class Platform
 {
-    public short PlatformId { get; set; }
+    public long PlatformId { get; set; }
 
     public string PlatformName { get; set; }
 

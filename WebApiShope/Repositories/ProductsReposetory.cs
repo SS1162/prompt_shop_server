@@ -25,12 +25,12 @@ namespace Repositories
                 ((minPrice == null) ? (true) : (product.Price > minPrice)) &&
                 ((MaxPrice == null) ? (true) : (product.Price < MaxPrice)));
 
-            if(orderByPrice!=null&& desc!=null)
+            if(orderByPrice!=null&& desc!=null&& orderByPrice != false && desc != false)
             {
                  quary = quary.OrderByDescending(x=>x.Price);
 
             }
-            if (orderByPrice != null && desc == null)
+            if (orderByPrice != null && (desc == null||desc==false)&& orderByPrice != false)
             {
                 quary  = quary.OrderBy(x => x.Price);
             }

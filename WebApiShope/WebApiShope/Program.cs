@@ -20,6 +20,8 @@ builder.Services.AddScoped<IProductsReposetory, ProductsReposetory>();
 
 builder.Services.AddScoped<Igemini, gemini>();
 
+builder.Services.AddScoped<IGeminiPromptsReposetory, GeminiPromptsReposetory>();
+
 
 builder.Services.AddScoped<IGeminiServise, GeminiServise>();
 

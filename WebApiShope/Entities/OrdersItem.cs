@@ -7,19 +7,21 @@ namespace Entities;
 
 public partial class OrdersItem
 {
-    public short OrderItemId { get; set; }
+    public long OrderItemId { get; set; }
 
-    public short ProductsId { get; set; }
+    public long ProductsId { get; set; }
 
-    public short OrderId { get; set; }
+    public long OrderId { get; set; }
 
-    public string UserDescription { get; set; }
+    public long? UserDescription { get; set; }
 
-    public short BasicSitesPlatforms { get; set; }
+    public long BasicSitesPlatforms { get; set; }
 
     public virtual Platform BasicSitesPlatformsNavigation { get; set; }
 
     public virtual Order Order { get; set; }
 
     public virtual Product Products { get; set; }
+
+    public virtual GeminiPrompt UserDescriptionNavigation { get; set; }
 }

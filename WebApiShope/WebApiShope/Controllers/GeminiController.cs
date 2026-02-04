@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services;
 using DTO;
+using Entities;
+using Google.GenAI;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApiShope.Controllers
@@ -19,38 +21,50 @@ namespace WebApiShope.Controllers
 
         // GET: api/<GeminiController>
         [HttpGet("getUserProduct")]
-        public   async  Task<ActionResult<string>> Get(int productId ,string userRequest)
+        public   async  Task<ActionResult<GeminiPrompt>> CreateUserPromptForProduct(long productId ,string userRequest)
         {
-            Resulte<string> resulte= await _geminiServise.getGeminiForUserProductServise(productId, userRequest);
+            Resulte<GeminiPrompt> resulte= await _geminiServise.AddGeminiForUserProductServise(productId, userRequest);
             if (!resulte.IsSuccess)
                 return BadRequest(resulte.ErrorMessage);
+            if(resulte.Data==null)
+            {
+                return Problem ("faild to load gemini try again");
+            }
             return Ok(resulte.Data);
         }
 
         // GET api/<GeminiController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<GeminiPrompt>> Get(int id)
         {
-            return "value";
+            GeminiPrompt? gemini = await _geminiServise.GetByIdPromptServise(id);
+
+            if(gemini == null)
+            {
+                return NoContent();
+            }
+            return Ok(gemini);
         }
 
-        // POST api/<GeminiController>
-        [HttpPost("addNewProduct")]
-        public void Post([FromBody] string value)
-        {
+        //// POST api/<GeminiController>)
+        //[HttpPost("addNewProduct")]
+        //public void Post([FromBody] string value)
+        //{
 
-        }
+        //}
 
         // PUT api/<GeminiController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task UpdatePrompt(long promptId, string userRequest)
         {
-        }
 
-        // DELETE api/<GeminiController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            await _geminiServise.AddGeminiForUserProductServise(promptId, userRequest);
+
         }
+        //// DELETE api/<GeminiController>/5
+        //[HttpDelete("{id}")]
+        //public void Delete(int id)
+        //{
+        //}
     }
 }

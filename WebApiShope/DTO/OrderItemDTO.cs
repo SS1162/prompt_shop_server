@@ -25,7 +25,9 @@ namespace DTO
 
         string CategoryDescreption ,
 
-        int orderID
+        int orderID,
+
+        int UserDescriptionID
 
     );
 }

@@ -7,7 +7,7 @@ namespace Entities;
 
 public partial class MainCategory
 {
-    public short MainCategoryId { get; set; }
+    public long MainCategoryId { get; set; }
 
     public string MainCategoryName { get; set; }
 

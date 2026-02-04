@@ -7,7 +7,7 @@ namespace Entities;
 
 public partial class Status
 {
-    public short StatusId { get; set; }
+    public long StatusId { get; set; }
 
     public string StatusName { get; set; }
 

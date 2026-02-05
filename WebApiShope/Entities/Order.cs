@@ -7,21 +7,21 @@ namespace Entities;
 
 public partial class Order
 {
-    public short OrderId { get; set; }
+    public long OrderId { get; set; }
 
     public DateOnly? OrderDate { get; set; }
 
     public double OrderSum { get; set; }
 
-    public short UserId { get; set; }
+    public long UserId { get; set; }
 
-    public short BasicId { get; set; }
+    public long BasicId { get; set; }
 
     public string FinalPrompt { get; set; }
 
-    public short? StatusId { get; set; }
+    public long? StatusId { get; set; }
 
-    public short? ReviewId { get; set; }
+    public long? ReviewId { get; set; }
 
     public virtual BasicSite Basic { get; set; }
 

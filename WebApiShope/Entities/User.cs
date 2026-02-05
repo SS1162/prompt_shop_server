@@ -7,7 +7,7 @@ namespace Entities;
 
 public partial class User
 {
-    public short UserId { get; set; }
+    public long UserId { get; set; }
 
     public string Password { get; set; }
 
@@ -19,7 +19,7 @@ public partial class User
 
     public string Phone { get; set; }
 
-    public short? BasicId { get; set; }
+    public long? BasicId { get; set; }
 
     public virtual BasicSite Basic { get; set; }
 

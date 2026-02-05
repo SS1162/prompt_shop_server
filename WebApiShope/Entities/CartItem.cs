@@ -7,21 +7,23 @@ namespace Entities;
 
 public partial class CartItem
 {
-    public short CartId { get; set; }
+    public long CartId { get; set; }
 
-    public short UserId { get; set; }
+    public long UserId { get; set; }
 
-    public short ProductsId { get; set; }
+    public long ProductsId { get; set; }
 
     public byte? Valid { get; set; }
 
-    public string UserDescription { get; set; }
+    public long? UserDescription { get; set; }
 
-    public short BasicSitesPlatforms { get; set; }
+    public long BasicSitesPlatforms { get; set; }
 
     public virtual Platform BasicSitesPlatformsNavigation { get; set; }
 
     public virtual Product Products { get; set; }
 
     public virtual User User { get; set; }
+
+    public virtual GeminiPrompt UserDescriptionNavigation { get; set; }
 }

@@ -14,9 +14,9 @@ namespace DTO
         int ProductsID,
         string UserDescription ,
         [Required]
-        int PlatformsID
+        int PlatformsID,
+        int UserDescriptionID
 
-        
 
     );
 }

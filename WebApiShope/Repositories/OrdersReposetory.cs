@@ -34,7 +34,7 @@ namespace Repositories
         {
             await _DBcontext.Orders.AddAsync(order);
             await _DBcontext.SaveChangesAsync();
-            await _cartsReposetory.DeleteUserCartReposetory(order.UserId);
+            await _cartsReposetory.DeleteUserCartReposetory(Convert.ToInt32(order.UserId));
             return order;
         }
 

@@ -37,7 +37,7 @@ namespace Repositories
             return await _DBContext.Categories.FirstOrDefaultAsync(x => x.MainCategoryId == id);
 
         }
-        async public Task<Category?> GetByIDCategoriesReposetory(int id)
+        async public Task<Category?> GetByIDCategoriesReposetory(long id)
         {
             return await _DBContext.Categories.FirstOrDefaultAsync(x => x.CategoryId == id);
 

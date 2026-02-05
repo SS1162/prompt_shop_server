@@ -7,15 +7,15 @@ namespace Entities;
 
 public partial class BasicSite
 {
-    public short BasicSiteId { get; set; }
+    public long BasicSiteId { get; set; }
 
     public string SiteName { get; set; }
 
-    public short? SiteTypeId { get; set; }
+    public long? SiteTypeId { get; set; }
 
     public string UserDescreption { get; set; }
 
-    public short BasicSitesPlatforms { get; set; }
+    public long BasicSitesPlatforms { get; set; }
 
     public virtual Platform BasicSitesPlatformsNavigation { get; set; }
 

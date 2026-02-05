@@ -2,6 +2,7 @@
 using Google.GenAI;
 using Google.GenAI.Types;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Repositories;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,11 @@ namespace Services
     public class gemini : Igemini
     {
         IConfiguration _config;
-       
-        public gemini(IConfiguration config)
+        ILogger<gemini> logger;
+        public gemini(IConfiguration config , ILogger<gemini> logger)
         {
             this._config = config;
+            this.logger = logger;   
         }
         public async Task<string> RunGeminiForUserProduct(string userRequest,string category)
         {
@@ -51,17 +53,25 @@ namespace Services
 
 
                 );
-
-                string reaspone2 = response.Candidates[0].Content.Parts[0].Text;
-                int start = reaspone2.IndexOf('{');
-                int end= reaspone2.IndexOf('}');
-                if(start==-1||end==-1)
+                try
                 {
+                string reaspone2 = response.Candidates[0].Content.Parts[0].Text;
+                    int start = reaspone2.IndexOf('{');
+                    int end = reaspone2.IndexOf('}');
+                    if (start == -1 || end == -1)
+                    {
+                        return null;
+                    }
+                    string subRespone = reaspone2.Substring(start, end - start + 1);
+
+                    return subRespone;
+                }
+                catch(Exception ex)
+                {
+                    //logger.LogWarning(ex.ToString()+"faild to extract the answer");
                     return null;
                 }
-                string subRespone = reaspone2.Substring(start, end - start + 1);
-
-                return subRespone;
+              
             }
             catch (Exception ex)
             {

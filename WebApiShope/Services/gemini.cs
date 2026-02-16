@@ -1,4 +1,4 @@
-﻿using Azure;
+using Azure;
 using Entities;
 using Google.GenAI;
 using Google.GenAI.Types;
@@ -16,8 +16,8 @@ namespace Services
 {
     public class gemini : Igemini
     {
-        IConfiguration _config;
-        ILogger<gemini> logger;
+        private readonly IConfiguration _config;
+        private readonly ILogger<gemini> logger;
 
         public gemini(IConfiguration config , ILogger<gemini> logger)
         {

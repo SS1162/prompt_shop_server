@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,12 +10,12 @@ namespace Repositories
 {
     public class CategoriesReposetory : ICategoriesReposetory
     {
-        MyShop330683525Context _DBContext;
+        private readonly MyShop330683525Context _DBContext;
         public CategoriesReposetory(MyShop330683525Context _DBContext)
         {
             this._DBContext = _DBContext;
         }
-        async public Task<(IEnumerable<Category>items,int totalCount)> GetCategoriesReposetory(int numberOfPages, int mainCategoryID, int pageSize, string? search)
+        async public Task<(IEnumerable<Category>items,int totalCount)> GetCategoriesReposetory(int numberOfPages, long mainCategoryID, int pageSize, string? search)
         {
 
             var quary = _DBContext.Categories.Where(
@@ -32,7 +32,7 @@ namespace Repositories
 
 
 
-        async public Task<Category?> GetByMainCategoriesIDReposetory(int id)
+        async public Task<Category?> GetByMainCategoriesIDReposetory(long id)
         {
             return await _DBContext.Categories.FirstOrDefaultAsync(x => x.MainCategoryId == id);
 
@@ -43,7 +43,7 @@ namespace Repositories
 
         }
 
-        async public Task UpdateCategoriesReposetory(int id, Category categoryToUpdate)
+        async public Task UpdateCategoriesReposetory(long id, Category categoryToUpdate)
         {
             _DBContext.Categories.Update(categoryToUpdate);
             await _DBContext.SaveChangesAsync();
@@ -58,7 +58,7 @@ namespace Repositories
             return categoryToUpdate;
 
         }
-        async public Task DeleteIDCategoriesReposetory(int id)
+        async public Task DeleteIDCategoriesReposetory(long id)
         {
             Category category = await _DBContext.Categories.FirstOrDefaultAsync(x => x.CategoryId == id);
            

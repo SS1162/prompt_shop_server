@@ -1,4 +1,4 @@
-﻿using DTO;
+using DTO;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -11,7 +11,7 @@ namespace WebApiShope.Controllers
     [ApiController]
     public class PlatformsController : ControllerBase
     {
-        IPlatformsServise _platformsServise;
+        private readonly IPlatformsServise _platformsServise;
         public PlatformsController(IPlatformsServise platformsServise) {
             this._platformsServise = platformsServise;
         }
@@ -42,7 +42,7 @@ namespace WebApiShope.Controllers
 
         // PUT api/<PlatformsController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdatePlatform(int id, [FromBody] PlatformsDTO platform)
+        public async Task<ActionResult> UpdatePlatform(long id, [FromBody] PlatformsDTO platform)
         {
             Resulte<PlatformsDTO>  respone= await _platformsServise.UpdatePlatformServise(id,platform);
             if (!respone.IsSuccess)
@@ -54,7 +54,7 @@ namespace WebApiShope.Controllers
 
         // DELETE api/<PlatformsController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(long id)
         {
             Resulte<PlatformsDTO> respone = await _platformsServise.DeletePlatformServise(id);
             if (!respone.IsSuccess)

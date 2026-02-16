@@ -9,12 +9,14 @@ namespace WebApiShope.MiddleWare
     {
         private readonly RequestDelegate _next;
 
-        public ErrorMiddleware(RequestDelegate next)
+        private readonly ILogger<ErrorMiddleware> _logger;
+        public ErrorMiddleware(RequestDelegate next, ILogger<ErrorMiddleware> logger)
         {
             _next = next;
+            this._logger = logger;
         }
 
-        public async Task Invoke(HttpContext httpContext,ILogger logger)
+        public async Task Invoke(HttpContext httpContext)
         {
         
                 try
@@ -25,7 +27,7 @@ namespace WebApiShope.MiddleWare
 
             {
                 httpContext.Response.StatusCode = 500;
-                logger.LogInformation($"{e}  {e.StackTrace}");
+                _logger.LogError($"{e.Message}  {e.StackTrace}");
             }
         
         }

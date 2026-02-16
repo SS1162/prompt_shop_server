@@ -7,18 +7,17 @@ namespace Entities;
 
 public partial class GeminiPrompt
 {
-  
-      public long PromptId { get; set; }
+    public long PromptId { get; set; }
 
     public string Prompt { get; set; }
 
-     public long? ProductsId { get; set; }
+    public long? CategoryId { get; set; }
 
-     public long CategoryId { get; set; }
-  
+    public virtual ICollection<BasicSite> BasicSites { get; set; } = new List<BasicSite>();
+
     public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 
-    public virtual ICollection<OrdersItem> OrdersItems { get; set; } = new List<OrdersItem>();
-
     public virtual Category Category { get; set; }
+
+    public virtual ICollection<OrdersItem> OrdersItems { get; set; } = new List<OrdersItem>();
 }

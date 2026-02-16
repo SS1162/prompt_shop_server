@@ -5,7 +5,7 @@ namespace Repositories
     public interface ISiteTypesRepository
     {
         Task<IEnumerable<SiteType>?> GetAllSiteTypesReposetory();
-        Task<SiteType?> GetSiteTypeByIdReposetory(int id);
-        Task UpdateSiteTypeByMngReposetory(int id, SiteType siteType);
+        Task<SiteType?> GetSiteTypeByIdReposetory(long id);
+        Task UpdateSiteTypeByMngReposetory(long id, SiteType siteType);
     }
 }

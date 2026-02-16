@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DTO;
 using Entities;
 using Google.GenAI.Types;
@@ -18,11 +18,11 @@ namespace Services
 {
     public class CategoriesServise : ICategoriesServise
     {
-        ICategoriesReposetory _categoriesReposetory;
-        IMapper _mapper;
-        IMainCategoriesReposetory _mainCategoriesReposetory;
-        IProductsReposetory _productsReposetory;
-        IConfiguration _config;
+        private readonly ICategoriesReposetory _categoriesReposetory;
+        private readonly IMapper _mapper;
+        private readonly IMainCategoriesReposetory _mainCategoriesReposetory;
+        private readonly IProductsReposetory _productsReposetory;
+        private readonly IConfiguration _config;
         public CategoriesServise(ICategoriesReposetory categoriesReposetory, IMapper mapper,
               IMainCategoriesReposetory mainCategoriesReposetory, IProductsReposetory productsReposetory,
               IConfiguration config)
@@ -34,7 +34,7 @@ namespace Services
             this._config=config;    
         }
 
-        async public Task<Resulte<ResponePage<CategoryDTO>>> GetCategoriesServise(int numberOfPages, int mainCategoryID, int pageSize, string? search)
+        async public Task<Resulte<ResponePage<CategoryDTO>>> GetCategoriesServise(int numberOfPages, long mainCategoryID, int pageSize, string? search)
         {
             MainCategory? checkIfMainCategoryInsist = await _mainCategoriesReposetory.GetByIdMainCategoriesReposetoty(mainCategoryID);
             if (checkIfMainCategoryInsist == null)
@@ -57,13 +57,13 @@ namespace Services
             return Resulte<ResponePage<CategoryDTO>>.Success(responeToClient);
         }
 
-        async public Task<CategoryDTO> GetByIDCategoriesServise(int id)
+        async public Task<CategoryDTO> GetByIDCategoriesServise(long id)
         {
             Category? CategoryFromReposetory = await _categoriesReposetory.GetByIDCategoriesReposetory(id);
             return _mapper.Map<CategoryDTO>(CategoryFromReposetory);
         }
 
-        async public Task<Resulte<CategoryDTO?>> UpdateCategoriesServise(int id, CategoryToUpdateDTO categoryToUpdate)
+        async public Task<Resulte<CategoryDTO?>> UpdateCategoriesServise(long id, CategoryToUpdateDTO categoryToUpdate)
         {
             if (id != categoryToUpdate.CategoryID)
             {
@@ -156,7 +156,7 @@ namespace Services
 
             return Resulte<CategoryDTO>.Success(_mapper.Map<CategoryDTO>(categoryFromReposetory));
         }
-        async public Task<Resulte<CategoryDTO>> DeleteIDCategoriesServise(int id)
+        async public Task<Resulte<CategoryDTO>> DeleteIDCategoriesServise(long id)
         {
             Product? checkIfProductInsist = await _productsReposetory.HasProductsToCatrgoryReposetory(id);
             if (checkIfProductInsist != null)

@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -156,7 +156,7 @@ namespace Tests
             {
                 // Arrange
                 // נשתמש ב-ID שקיים ב-Seed ואין לו תלויות (כפי שה-Service היה מאשר)
-                int idToDelete = 2;
+                long idToDelete = 2;
 
                 // Act
                 await _repository.DeleteMainCategoriesReposetoty(idToDelete);
@@ -172,7 +172,7 @@ namespace Tests
             {
                 // טסט זה נועד לוודא ששגיאות DB אמיתיות (כמו בעיית תקשורת או אילוץ לא צפוי) עוברות הלאה
                 // Arrange
-                int nonExistingId = 999;
+                long nonExistingId = 999;
 
                 // Act & Assert
                 // מכיוון שה-Remove מקבל null (כי ה-ID לא קיים), נצפה לשגיאה טכנית

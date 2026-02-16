@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DTO;
 using Entities;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +13,11 @@ namespace Services
     public class ProductsServise : IProductsServise
     {
 
-        IProductsReposetory _productsReposetory;
-        IMapper _mapper;
-        ICategoriesReposetory _categoriesReposetory;
-        ICartsReposetory _cartReposetory;
-        IOrdersReposetory _ordersReposetory;
+        private readonly IProductsReposetory _productsReposetory;
+        private readonly IMapper _mapper;
+        private readonly ICategoriesReposetory _categoriesReposetory;
+        private readonly ICartsReposetory _cartReposetory;
+        private readonly IOrdersReposetory _ordersReposetory;
         public ProductsServise(IProductsReposetory productsReposetory,
         IMapper mapper, ICategoriesReposetory categoriesReposetory, ICartsReposetory cartReposetory, IOrdersReposetory ordersReposetory)
         {
@@ -28,7 +28,7 @@ namespace Services
             _ordersReposetory = ordersReposetory;
         }
 
-        async public Task<Resulte<ResponePage<ProductDTO>>> GetProductsServise(int categoryID, int numOfPages, int PageSize, string? search, int? minPrice, int? MaxPrice, bool? orderByPrice, bool? desc)
+        async public Task<Resulte<ResponePage<ProductDTO>>> GetProductsServise(long categoryID, int numOfPages, int PageSize, string? search, int? minPrice, int? MaxPrice, bool? orderByPrice, bool? desc)
         {
 
 
@@ -69,7 +69,7 @@ namespace Services
             return Resulte<ResponePage<ProductDTO>>.Success(responeForClient);
         }
 
-        async public Task<Resulte<ProductDTO>> UpdateProductServise(int id, UpdateProductDTO productToUpdate)
+        async public Task<Resulte<ProductDTO>> UpdateProductServise(long id, UpdateProductDTO productToUpdate)
         {
             if (id != productToUpdate.ProductID)
             {
@@ -104,7 +104,7 @@ namespace Services
 
             return Resulte<ProductDTO>.Success(_mapper.Map<ProductDTO>(productFromReposetory));
         }
-        async public Task<Resulte<ProductDTO>> DeleteIDProductServise(int id)
+        async public Task<Resulte<ProductDTO>> DeleteIDProductServise(long id)
         {
 
 

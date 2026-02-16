@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
@@ -12,11 +12,11 @@ namespace  Services
 {
     public class PlatformsServise : IPlatformsServise
     {
-        IPlatformsReposetory _platformsReposetory;
-        IMapper _mapper;
-        IBasicSitesReposetory _basicSitesReposetory;
-        ICartsReposetory _cartsReposetory;
-        IOrdersReposetory _ordersReposetory;
+        private readonly IPlatformsReposetory _platformsReposetory;
+        private readonly IMapper _mapper;
+        private readonly IBasicSitesReposetory _basicSitesReposetory;
+        private readonly ICartsReposetory _cartsReposetory;
+        private readonly IOrdersReposetory _ordersReposetory;
         public PlatformsServise(IPlatformsReposetory platformsReposetory, IMapper mapper, IBasicSitesReposetory basicSitesReposetory, ICartsReposetory cartsReposetory, IOrdersReposetory ordersReposetory)
         {
 
@@ -43,7 +43,7 @@ namespace  Services
             return _mapper.Map<PlatformsDTO>(platformFromReposetory);
         }
 
-        async public Task<Resulte<PlatformsDTO>> UpdatePlatformServise(int id, PlatformsDTO platform)
+        async public Task<Resulte<PlatformsDTO>> UpdatePlatformServise(long id, PlatformsDTO platform)
         {
             if (id != platform.PlatformID)
             {
@@ -63,7 +63,7 @@ namespace  Services
             return Resulte<PlatformsDTO>.Success(null);
         }
 
-        async public Task<Resulte<PlatformsDTO>> DeletePlatformServise(int id)
+        async public Task<Resulte<PlatformsDTO>> DeletePlatformServise(long id)
         {
 
             Platform? checkIfPlatformExist = await _platformsReposetory.GetByIDPlatformsReposetory(id);

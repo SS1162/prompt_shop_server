@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace Repositories
 {
     public class GeminiPromptsReposetory : IGeminiPromptsReposetory
     {
-        MyShop330683525Context _DBContext;
+        private readonly MyShop330683525Context _DBContext;
         public GeminiPromptsReposetory(MyShop330683525Context DBContext)
         {
             this._DBContext = DBContext;
@@ -33,7 +33,13 @@ namespace Repositories
 
         }
 
+        async public Task DeletePromptReposetory(long id)
+        {
+            GeminiPrompt prompt = await _DBContext.GeminiPrompts.FirstOrDefaultAsync(x => x.PromptId == id);
+            _DBContext.GeminiPrompts.Remove(prompt);
+            await _DBContext.SaveChangesAsync();
 
+        }
         async public Task<GeminiPrompt?> GetByIDPromptReposetory(long id)
         {
             return await _DBContext.GeminiPrompts.FirstOrDefaultAsync(x => x.PromptId == id);

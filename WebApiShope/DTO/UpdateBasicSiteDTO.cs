@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,13 +10,13 @@ namespace DTO
     public record UpdateBasicSiteDTO
     (
         [Required]
-         int BasicSiteID ,
+         long BasicSiteID ,
         [Required]
          string SiteName ,
          string UserDescreption ,
          [Required]
-         int SiteTypeID ,
+         long SiteTypeID ,
          [Required]
-         int PlatformID 
+         long PlatformID 
     );
 }

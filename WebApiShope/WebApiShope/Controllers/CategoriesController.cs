@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Services;
 using DTO;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -10,13 +10,13 @@ namespace WebApiShope.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        ICategoriesServise _categoriesServise;
+        private readonly ICategoriesServise _categoriesServise;
         public CategoriesController(ICategoriesServise categoriesServise) {
             this._categoriesServise = categoriesServise;
         }
         // GET: api/<CategoryController>
         [HttpGet]
-        async public Task<ActionResult<ResponePage<CategoryDTO>>> GetCategoriesByMainCategoryID(int numberOfPages, int mainCategoryID, int pageSize, string? search)
+        async public Task<ActionResult<ResponePage<CategoryDTO>>> GetCategoriesByMainCategoryID(int numberOfPages, long mainCategoryID, int pageSize, string? search)
         {
             Resulte<ResponePage<CategoryDTO>> respone = await _categoriesServise.GetCategoriesServise(numberOfPages, mainCategoryID, pageSize, search);
             if(!respone.IsSuccess)
@@ -33,7 +33,7 @@ namespace WebApiShope.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        async public Task<ActionResult<CategoryDTO>> GetCategoryByCategoryID(int id)
+        async public Task<ActionResult<CategoryDTO>> GetCategoryByCategoryID(long id)
         {
             CategoryDTO category =await _categoriesServise.GetByIDCategoriesServise(id);
             if(category==null)
@@ -58,7 +58,7 @@ namespace WebApiShope.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        async public Task<ActionResult> UpdateCategory(int id, [FromForm] CategoryToUpdateDTO category)
+        async public Task<ActionResult> UpdateCategory(long id, [FromForm] CategoryToUpdateDTO category)
         {
             Resulte<CategoryDTO> respone = await _categoriesServise.UpdateCategoriesServise(id, category);
             if (!respone.IsSuccess)
@@ -70,7 +70,7 @@ namespace WebApiShope.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        async public Task<ActionResult> DeleteCategoty(int id )
+        async public Task<ActionResult> DeleteCategoty(long id )
         {
             Resulte<CategoryDTO> respone = await _categoriesServise.DeleteIDCategoriesServise(id);
             if (!respone.IsSuccess)

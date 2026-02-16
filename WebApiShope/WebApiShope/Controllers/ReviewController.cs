@@ -1,4 +1,4 @@
-﻿using DTO;
+using DTO;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 
@@ -10,11 +10,11 @@ namespace WebApiShope.Controllers
     [ApiController]
     public class ReviewController : ControllerBase
     {
-        IReviewsServise _reviewsServise;
+        private readonly IReviewsServise _reviewsServise;
         public ReviewController() { }
         // POST api/<OrdersController>/5/review   
         [HttpPost]
-        public async Task<ActionResult<ReviewDTO>> AddReviewAsync(int orderId, AddReviewDTO dto)
+        public async Task<ActionResult<ReviewDTO>> AddReviewAsync(long orderId, AddReviewDTO dto)
         {
             Resulte<ReviewDTO> respone = await _reviewsServise.AddReviewServise(orderId, dto);
             if(!respone.IsSuccess)
@@ -26,7 +26,7 @@ namespace WebApiShope.Controllers
 
         // GET api/<OrdersController>/5/review
         [HttpGet("{id}")]
-        public async Task<ActionResult<ReviewDTO>> GetReviewByOrderId([FromBody] int orderId)
+        public async Task<ActionResult<ReviewDTO>> GetReviewByOrderId([FromBody] long orderId)
         {
             Resulte<ReviewDTO> respone = await _reviewsServise.GetReviewByOrderIdServise(orderId);
             if (!respone.IsSuccess)
@@ -38,7 +38,7 @@ namespace WebApiShope.Controllers
 
         // PUT api/<OrdersController>/5/review
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateReviewAsync(int id,[FromBody] ReviewDTO dto)
+        public async Task<ActionResult> UpdateReviewAsync(long id,[FromBody] ReviewDTO dto)
         {
 
             Resulte<ReviewDTO> respone = await _reviewsServise.UpdateReviewServise(id,dto);

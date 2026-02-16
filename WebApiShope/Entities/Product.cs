@@ -21,7 +21,5 @@ public partial class Product
 
     public virtual Category Category { get; set; }
 
-    public virtual ICollection<GeminiPrompt> GeminiPrompts { get; set; } = new List<GeminiPrompt>();
-
     public virtual ICollection<OrdersItem> OrdersItems { get; set; } = new List<OrdersItem>();
 }

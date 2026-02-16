@@ -9,7 +9,7 @@ namespace DTO
 {
     public record CartItemDTO
     (
-         int CartID ,
+         long CartID ,
 
          string ProductsName ,
 
@@ -25,7 +25,9 @@ namespace DTO
 
          string UserDescription ,
 
-         string PlatformName 
+         string PlatformName ,
+
+         long productID
 
     );
 }

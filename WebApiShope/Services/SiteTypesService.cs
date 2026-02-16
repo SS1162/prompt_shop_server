@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DTO;
 using Entities;
 using Repositories;
@@ -13,8 +13,8 @@ namespace Services
     public class SiteTypesService :ISiteTypesService
     {
 
-        ISiteTypesRepository _siteTypesRepository;
-        IMapper _mapper;
+        private readonly ISiteTypesRepository _siteTypesRepository;
+        private readonly IMapper _mapper;
 
         public SiteTypesService(ISiteTypesRepository siteTypesRepository, IMapper mapper)
         {
@@ -30,13 +30,13 @@ namespace Services
             return _mapper.Map<IEnumerable<SiteTypeDTO>>(siteTypes);
 
         }
-        public async Task<SiteTypeDTO?> GetSiteTypesByIdServise(int id)
+        public async Task<SiteTypeDTO?> GetSiteTypesByIdServise(long id)
         {
             SiteType? siteType = await _siteTypesRepository.GetSiteTypeByIdReposetory(id);
             return _mapper.Map<SiteTypeDTO>(siteType);
         }
 
-        public async Task<Resulte<SiteTypeDTO>> UpdateSiteTypesByMngServise(int id, SiteTypeDTO dto)
+        public async Task<Resulte<SiteTypeDTO>> UpdateSiteTypesByMngServise(long id, SiteTypeDTO dto)
         {
             if (id != dto.SiteTypeID)
             {

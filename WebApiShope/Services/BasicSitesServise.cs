@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DTO;
 using Entities;
 using Repositories;
@@ -13,10 +13,10 @@ namespace Services
 {
     public class BasicSitesServise :IBasicSitesServise
     {
-        ISiteTypesRepository _siteTypesRepository;
-        IBasicSitesReposetory _basicSitesReposetory;
-        IMapper _mapper;
-        IPlatformsReposetory _platformsReposetory;
+        private readonly ISiteTypesRepository _siteTypesRepository;
+        private readonly IBasicSitesReposetory _basicSitesReposetory;
+        private readonly IMapper _mapper;
+        private readonly IPlatformsReposetory _platformsReposetory;
         public BasicSitesServise(IMapper mapper, IBasicSitesReposetory basicSitesReposetory, ISiteTypesRepository siteTypesRepository
             ,IPlatformsReposetory platformsReposetory)
         {
@@ -27,14 +27,14 @@ namespace Services
         }
 
 
-        async public Task<BasicSiteDTO> GetByIDbasicSiteServise(int id)
+        async public Task<BasicSiteDTO> GetByIDbasicSiteServise(long id)
         {
             BasicSite? basicSiteFromReposetory = await _basicSitesReposetory.GetByIDBasicSiteReposetory(id);
             return _mapper.Map<BasicSiteDTO>(basicSiteFromReposetory);
 
         }
 
-        async public Task<Resulte<BasicSiteDTO?>> UpdateBasicSiteServise(int id, UpdateBasicSiteDTO basicSiteToUpdate)
+        async public Task<Resulte<BasicSiteDTO?>> UpdateBasicSiteServise(long id, UpdateBasicSiteDTO basicSiteToUpdate)
         {
             if(id!= basicSiteToUpdate.BasicSiteID)
             {
@@ -42,7 +42,7 @@ namespace Services
             }
             BasicSite? checkIfBasicSiteInsist = await _basicSitesReposetory.GetByIDBasicSiteReposetory(id);
             Platform ? platformToCheckId = await _platformsReposetory.GetByIDPlatformsReposetory(basicSiteToUpdate.PlatformID);
-            SiteType? checkIfIsEmptySiteType = await _siteTypesRepository.GetSiteTypeByIdReposetory((int)basicSiteToUpdate.SiteTypeID);
+            SiteType? checkIfIsEmptySiteType = await _siteTypesRepository.GetSiteTypeByIdReposetory(basicSiteToUpdate.SiteTypeID);
             if (checkIfBasicSiteInsist == null)
             {
                 return Resulte<BasicSiteDTO?>.Failure("The Basic Site ID isn't insist");
@@ -74,7 +74,7 @@ namespace Services
         async public Task<Resulte<BasicSiteDTO?>> AddBasicSiteServise(AddBasicSiteDTO BasicSiteToAdd)
         {
             Platform? platformToCheckId = await _platformsReposetory.GetByIDPlatformsReposetory(BasicSiteToAdd.PlatformID);
-            SiteType? checkIfIsEmptySiteType = await _siteTypesRepository.GetSiteTypeByIdReposetory((int)BasicSiteToAdd.SiteTypeID);
+            SiteType? checkIfIsEmptySiteType = await _siteTypesRepository.GetSiteTypeByIdReposetory(BasicSiteToAdd.SiteTypeID);
             if (checkIfIsEmptySiteType == null)
             {
                 return Resulte<BasicSiteDTO?>.Failure("The Type syte ID isn't insist");

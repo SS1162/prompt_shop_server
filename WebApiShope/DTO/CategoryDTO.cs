@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,10 +10,10 @@ namespace DTO
     public record CategoryDTO
     (
         [Required]
-         int CategoryID ,
+         long CategoryID ,
 
         [Required]
-         int MainCategoryID ,
+         long MainCategoryID ,
 
         [Required]
          string CategoryName ,

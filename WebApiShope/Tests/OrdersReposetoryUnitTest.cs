@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,7 +34,7 @@ namespace Tests
         public async Task GetOrderById_HappyPath_ReturnsCorrectOrder()
         {
             // Arrange
-            short existingId = 1;
+            long existingId = 1;
 
             // Act
             var result = await _repository.GetOrderByIdReposetory(existingId);
@@ -50,7 +50,7 @@ namespace Tests
         public async Task GetOrderById_WhenOrderDoesNotExist_ReturnsNull()
         {
             // Arrange
-            short nonExistingId = 999;
+            long nonExistingId = 999;
 
             // Act
             var result = await _repository.GetOrderByIdReposetory(nonExistingId);
@@ -63,7 +63,7 @@ namespace Tests
         [InlineData(0)]
         [InlineData(-5)]
         // Unhappy Path: בדיקת קצה עבור מזהים לא הגיוניים (אפס או שלילי)
-        public async Task GetOrderById_InvalidId_ReturnsNull(short invalidId)
+        public async Task GetOrderById_InvalidId_ReturnsNull(long invalidId)
         {
             // Act
             var result = await _repository.GetOrderByIdReposetory(invalidId);
@@ -78,7 +78,7 @@ namespace Tests
         public async Task AddOrder_HappyPath_ShouldExecuteWithUserId()
         {
             // Arrange
-            var userId = (short)101;
+            var userId = (long)101;
             var newOrder = new Order
             {
                 OrderId = 10,
@@ -117,7 +117,7 @@ namespace Tests
             );
 
             // וידאו שמחיקת העגלה לא נקראה בגלל הכישלון בשמירה
-            _mockCartsRepo.Verify(r => r.DeleteUserCartReposetory(It.IsAny<short>()), Times.Never());
+            _mockCartsRepo.Verify(r => r.DeleteUserCartReposetory(It.IsAny<long>()), Times.Never());
         }
 
 
@@ -126,10 +126,10 @@ namespace Tests
         public async Task UpdateStatus_HappyPath_ShouldUpdateAndSave()
         {
             // Arrange
-            int orderId = 1;
+            long orderId = 1;
             var orderToUpdate = new Order
             {
-                OrderId = (short)orderId,
+                OrderId = orderId,
                 UserId = 101,
                 OrderSum = 200
             };
@@ -150,8 +150,8 @@ namespace Tests
         public async Task UpdateStatus_WhenDatabaseFails_ShouldThrowException()
         {
             // Arrange
-            int orderId = 1;
-            var order = new Order { OrderId = (short)orderId };
+            long orderId = 1;
+            var order = new Order { OrderId = orderId };
 
             // הגדרת המוק שיזרוק שגיאה בזמן השמירה
             _fixture.MockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()))
@@ -170,7 +170,7 @@ namespace Tests
         public async Task GetOrderItems_HappyPath_ReturnsCorrectItemsForOrder()
         {
             // Arrange
-            int existingOrderId = 1;
+            long existingOrderId = 1;
 
             // Act
             var result = await _repository.GetOrderItemsReposetory(existingOrderId);
@@ -194,7 +194,7 @@ namespace Tests
         public async Task GetOrderItems_WhenOrderIdNotFound_ReturnsEmptyList()
         {
             // Arrange
-            int nonExistingOrderId = 999;
+            long nonExistingOrderId = 999;
 
             // Act
             var result = await _repository.GetOrderItemsReposetory(nonExistingOrderId);
@@ -210,7 +210,7 @@ namespace Tests
         public async Task GetOrderItems_DifferentOrder_ReturnsDifferentItems()
         {
             // Arrange
-            int secondOrderId = 2;
+            long secondOrderId = 2;
 
             // Act
             var result = await _repository.GetOrderItemsReposetory(secondOrderId);
@@ -230,7 +230,7 @@ namespace Tests
         {
             // Arrange
             // ב-Fixture הגדרת פריט עם ProductsId = 50
-            int existingProductId = 50;
+            long existingProductId = 50;
 
             // Act
             var result = await _repository.CheckIfHasProductByProductID(existingProductId);
@@ -245,7 +245,7 @@ namespace Tests
         public async Task CheckIfHasProductByProductID_ProductDoesNotExist_ReturnsNull()
         {
             // Arrange
-            int nonExistingProductId = 999;
+            long nonExistingProductId = 999;
 
             // Act
             var result = await _repository.CheckIfHasProductByProductID(nonExistingProductId);
@@ -261,7 +261,7 @@ namespace Tests
         {
             // Arrange
             // ב-Fixture הגדרת פריטים עם BasicSitesPlatforms = 1
-            int existingPlatformId = 1;
+            long existingPlatformId = 1;
 
             // Act
             var result = await _repository.CheckIfHasPlatformByPlatformID(existingPlatformId);
@@ -275,7 +275,7 @@ namespace Tests
         public async Task CheckIfHasPlatformByPlatformID_PlatformDoesNotExist_ReturnsNull()
         {
             // Arrange
-            int nonExistingPlatformId = 888;
+            long nonExistingPlatformId = 888;
 
             // Act
             var result = await _repository.CheckIfHasPlatformByPlatformID(nonExistingPlatformId);

@@ -1,4 +1,4 @@
-﻿using DTO;
+using DTO;
 using Entities;
 using Microsoft.Identity.Client;
 using Repositories;
@@ -12,10 +12,10 @@ namespace Services
 {
     public class GeminiServise : IGeminiServise
     {
-        Igemini _gemini;
-        IGeminiPromptsReposetory _geminiPromptsReposetory;
-        ICategoriesReposetory _categoriesReposetory;
-        IMainCategoriesReposetory _mainCategoriesReposetory;
+        private readonly Igemini _gemini;
+        private readonly IGeminiPromptsReposetory _geminiPromptsReposetory;
+        private readonly ICategoriesReposetory _categoriesReposetory;
+        private readonly IMainCategoriesReposetory _mainCategoriesReposetory;
         public GeminiServise(Igemini gemini, ICategoriesReposetory categoriesReposetory,
             IGeminiPromptsReposetory geminiPromptsReposetory, IMainCategoriesReposetory mainCategoriesReposetory    )
         {

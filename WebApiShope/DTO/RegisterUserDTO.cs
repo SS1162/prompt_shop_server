@@ -7,17 +7,18 @@ namespace DTO
         [EmailAddress]
         [Required]
          string UserName ,
-        [Required]
-         string UserPassword ,
+        
+         string? UserPassword ,
 
-       
+          string? GoogleId,
+
          string FirstName ,
 
 
-         string LastName ,
+         string? LastName ,
 
         [Phone]
-         string Phone 
+         string? Phone 
 
    );
 }

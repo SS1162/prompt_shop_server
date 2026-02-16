@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Repositories;
 using DTO;
 using AutoMapper;
@@ -6,16 +6,16 @@ namespace Services
 {
     public class UsersService : IUsersService
     {//get by id
-        private IUsersReposetory _usersReposetory;
-        private IMapper _mapper;
-        private IPasswordsService _passwordsService;
+        private readonly IUsersReposetory _usersReposetory;
+        private readonly IMapper _mapper;
+        private readonly IPasswordsService _passwordsService;
         public UsersService(IUsersReposetory repositoriesUsers, IMapper mapper, IPasswordsService passwordsService)
         {
             this._usersReposetory = repositoriesUsers;
             this._mapper = mapper;
             this._passwordsService = passwordsService;
         }
-        public async Task<UserDTO> GetByIDUsersService(int id)
+        public async Task<UserDTO> GetByIDUsersService(long id)
         {
 
             User? user = await _usersReposetory.GetByIDUsersRepositories(id);
@@ -68,7 +68,7 @@ namespace Services
             return userToConroller;
         }
 
-        async public Task<Resulte<UserDTO>> UpdateUsersService(int id, UpdateUserDTO userToUpdate)
+        async public Task<Resulte<UserDTO>> UpdateUsersService(long id, UpdateUserDTO userToUpdate)
         {
 
 

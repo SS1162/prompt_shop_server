@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Repositories
     {
 
 
-        MyShop330683525Context _DBcontext;
+        private readonly MyShop330683525Context _DBcontext;
 
         public ReviewsReposetory(MyShop330683525Context _DBcontext)
         {
@@ -28,19 +28,19 @@ namespace Repositories
         }
 
 
-        public async Task<Review?> GetByidReviewReposetory(int id)
+        public async Task<Review?> GetByidReviewReposetory(long id)
         {
             return await _DBcontext.Reviews.FirstOrDefaultAsync(x => x.ReviewId == id);
         }
 
-        public async Task<Review> GetReviewByOrderIdReposetory(int orderId)
+        public async Task<Review> GetReviewByOrderIdReposetory(long orderId)
         {
             Order orderForReviews = await _DBcontext.Orders.FirstOrDefaultAsync(r => r.OrderId == orderId);
                 return await _DBcontext.Reviews.FirstOrDefaultAsync(r => r.ReviewId == orderForReviews.ReviewId);
          
         }
 
-        public async Task UpdateReviewReposetory(int id ,Review review)
+        public async Task UpdateReviewReposetory(long id ,Review review)
         {
             _DBcontext.Reviews.Update(review);
             await _DBcontext.SaveChangesAsync();

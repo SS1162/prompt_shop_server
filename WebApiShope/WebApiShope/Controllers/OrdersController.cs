@@ -1,4 +1,4 @@
-﻿using Azure;
+using Azure;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -11,14 +11,14 @@ namespace WebApiShope.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        IOrdersServise _ordersServise;
+        private readonly IOrdersServise _ordersServise;
         public OrdersController(IOrdersServise ordersServise)
         {
             this._ordersServise = ordersServise;
         }
         // GET: api/<OrdersController>
         [HttpGet("{orderId}/orderItems")]
-        async public Task<ActionResult<IEnumerable<OrderItemDTO>>> GetOrdersItems([FromBody] int orderId)
+        async public Task<ActionResult<IEnumerable<OrderItemDTO>>> GetOrdersItems([FromBody] long orderId)
         {
             Resulte<IEnumerable<OrderItemDTO>> reaspone = await _ordersServise.GetOrderItemsServise(orderId);
             if (!reaspone.IsSuccess  )
@@ -33,7 +33,7 @@ namespace WebApiShope.Controllers
         }
         // GET api/<OrdersController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FullOrderDTO>> GetByID(int id)
+        public async Task<ActionResult<FullOrderDTO>> GetByID(long id)
         {
             FullOrderDTO order = await _ordersServise.GetByIdOrderServise(id);
             if (order == null)
@@ -60,7 +60,7 @@ namespace WebApiShope.Controllers
 
         // PUT api/<OrdersController>/5
         [HttpPut("{id}")]
-        async public Task<ActionResult> UpdateStatuse(int id, [FromBody] FullOrderDTO order)
+        async public Task<ActionResult> UpdateStatuse(long id, [FromBody] FullOrderDTO order)
         {
             Resulte<FullOrderDTO> reaspone=await _ordersServise.UpdateStatusServise(id, order);
             if (!reaspone.IsSuccess)

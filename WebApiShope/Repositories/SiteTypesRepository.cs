@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace Repositories
 {
     public class SiteTypesRepository : ISiteTypesRepository
     {
-        MyShop330683525Context _DBcontext;
+        private readonly MyShop330683525Context _DBcontext;
         public SiteTypesRepository(MyShop330683525Context _DBcontext)
         {
             this._DBcontext = _DBcontext;
@@ -20,11 +20,11 @@ namespace Repositories
         {
             return await _DBcontext.SiteTypes.ToListAsync();
         }
-        public async Task<SiteType?> GetSiteTypeByIdReposetory(int id)
+        public async Task<SiteType?> GetSiteTypeByIdReposetory(long id)
         {
             return await _DBcontext.SiteTypes.FirstOrDefaultAsync(u => u.SiteTypeId == id);
         }
-        public async Task UpdateSiteTypeByMngReposetory(int id,SiteType siteType)
+        public async Task UpdateSiteTypeByMngReposetory(long id,SiteType siteType)
         {
             _DBcontext.SiteTypes.Update(siteType);
             await _DBcontext.SaveChangesAsync();

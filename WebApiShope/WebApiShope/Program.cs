@@ -22,6 +22,8 @@ builder.Services.AddScoped<Igemini, gemini>();
 
 builder.Services.AddScoped<IGeminiPromptsReposetory, GeminiPromptsReposetory>();
 
+builder.Services.AddScoped<ICreatePrompt, CreatePrompt>();
+
 
 builder.Services.AddScoped<IGeminiServise, GeminiServise>();
 
@@ -84,7 +86,7 @@ builder.Services.AddOpenApi();
 
 builder.Host.UseNLog();
 var app = builder.Build();
-//app.UseErrorMiddleware();
+app.UseErrorMiddleware();
 app.UseRatingMiddleware();
 
 

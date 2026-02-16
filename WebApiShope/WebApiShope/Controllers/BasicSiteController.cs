@@ -1,4 +1,4 @@
-﻿using DTO;
+using DTO;
 using Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +13,7 @@ namespace WebApiShope.Controllers
     [ApiController]
     public class BasicSiteController : ControllerBase
     {
-        IBasicSitesServise _basicSitesServise;
+        private readonly IBasicSitesServise _basicSitesServise;
         public BasicSiteController(IBasicSitesServise basicSitesServise)
         {
             this._basicSitesServise = basicSitesServise;
@@ -23,7 +23,7 @@ namespace WebApiShope.Controllers
       
         // GET api/<BasicSiteController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BasicSiteDTO>> GetBasicSiteByID(int id)
+        public async Task<ActionResult<BasicSiteDTO>> GetBasicSiteByID(long id)
         {
             BasicSiteDTO basicSite = await _basicSitesServise.GetByIDbasicSiteServise(id);
             if (basicSite == null)
@@ -49,7 +49,7 @@ namespace WebApiShope.Controllers
 
         // PUT api/<BasicSiteController>/5
         [HttpPut("{id}")]
-        async public Task<ActionResult> UpdateBasicSite(int id, [FromBody] UpdateBasicSiteDTO basicSite)
+        async public Task<ActionResult> UpdateBasicSite(long id, [FromBody] UpdateBasicSiteDTO basicSite)
         {
             Resulte<BasicSiteDTO?> resulteFromController = await _basicSitesServise.UpdateBasicSiteServise(id, basicSite);
             if (!resulteFromController.IsSuccess)

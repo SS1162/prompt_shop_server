@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Entities;
 using Google.GenAI;
 using Google.GenAI.Types;
@@ -23,11 +23,11 @@ namespace Services
 {
     public class CreatePrompt : ICreatePrompt
     {
-        IOrdersReposetory _ordersReposetory;
-        IBasicSitesReposetory _basicSitesReposetory;
-        IGeminiPromptsReposetory _geminiPromptReposetory;
-        ISiteTypesRepository _siteTypesRepository;
-        IPlatformsReposetory _platformsReposetory;
+        private readonly IOrdersReposetory _ordersReposetory;
+        private readonly IBasicSitesReposetory _basicSitesReposetory;
+        private readonly IGeminiPromptsReposetory _geminiPromptReposetory;
+        private readonly ISiteTypesRepository _siteTypesRepository;
+        private readonly IPlatformsReposetory _platformsReposetory;
         public CreatePrompt(IOrdersReposetory ordersReposetory, IBasicSitesReposetory basicSitesReposetory
             , IGeminiPromptsReposetory geminiPromptsReposetory, ISiteTypesRepository siteTypesRepository,
             PlatformsReposetory platformsReposetory)

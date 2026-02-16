@@ -1,4 +1,4 @@
-﻿using DTO;
+using DTO;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -10,7 +10,7 @@ namespace WebApiShope.Controllers
     [ApiController]
     public class PasswordController : ControllerBase
     {
-        IPasswordsService _passwordService; 
+        private readonly IPasswordsService _passwordService; 
 
 
         public PasswordController(IPasswordsService passwordService)

@@ -1,4 +1,4 @@
-﻿using DTO;
+using DTO;
 using Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +15,11 @@ namespace WebApiShope.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private IUsersService _usersService;
+        private readonly IUsersService _usersService;
 
       
 
-        ILogger<UsersController> _logger;
+        private readonly ILogger<UsersController> _logger;
 
         public UsersController(IUsersService usersService, ILogger<UsersController> logger)
         {
@@ -41,7 +41,7 @@ namespace WebApiShope.Controllers
 
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDTO>> GetUserById(int id)
+        public async Task<ActionResult<UserDTO>> GetUserById(long id)
         {
 
             UserDTO user = await _usersService.GetByIDUsersService(id);
@@ -76,20 +76,26 @@ namespace WebApiShope.Controllers
 
         }
 
-
+        [HttpPost("signInWithGoogle")]
+        public async Task<ActionResult<UserDTO>> SignInWithGoogle([FromBody] RegisterUserDTO userFromUser)
+        {
+           UserDTO reaspne = await _usersService.SignInWithGoogleServise(userFromUser);
+         
+            return Ok(reaspne);
+        }
         [HttpPost]
         public async Task<ActionResult<UserDTO>> AddNewUser([FromBody] RegisterUserDTO userFromUser)
         {
             Resulte<UserDTO> reaspne = await _usersService.AddNewUsersService(userFromUser);
             if(!reaspne.IsSuccess)
             {
-                return   BadRequest( reaspne.ErrorMessage);
+                return   BadRequest(reaspne.ErrorMessage);
             }
                 return CreatedAtAction(nameof(GetUserById), new { id = reaspne.Data.UserID }, reaspne.Data);
         }
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        async public Task<ActionResult> Put(int id, [FromBody] UpdateUserDTO user)
+        async public Task<ActionResult> Put(long id, [FromBody] UpdateUserDTO user)
         {
 
             Resulte < UserDTO >  reaspone= await _usersService.UpdateUsersService(id, user);

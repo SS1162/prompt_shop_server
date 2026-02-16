@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,13 +9,13 @@ namespace DTO
 {
     public  record AddToCartDTO
     (   [Required]
-        int UserID ,
+        long UserID ,
         [Required]
-        int ProductsID,
+        long ProductsID,
         string UserDescription ,
         [Required]
-        int PlatformsID,
-        int UserDescriptionID
+        long PlatformsID,
+        long UserDescriptionID
 
 
     );

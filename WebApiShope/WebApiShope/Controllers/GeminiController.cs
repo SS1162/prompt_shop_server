@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Services;
 using DTO;
 using Entities;
@@ -12,7 +12,7 @@ namespace WebApiShope.Controllers
     public class GeminiController : ControllerBase
     {
 
-        IGeminiServise _geminiServise;
+        private readonly IGeminiServise _geminiServise;
 
         public GeminiController(IGeminiServise geminiServise)
         {
@@ -20,22 +20,57 @@ namespace WebApiShope.Controllers
         }
 
         // GET: api/<GeminiController>
-        [HttpGet("getUserProduct")]
-        public   async  Task<ActionResult<GeminiPrompt>> CreateUserPromptForProduct(long productId ,string userRequest)
+        [HttpPost("userProduct")]
+        public   async  Task<ActionResult<GeminiPrompt>> CreateUserPromptForProduct(long categoryId, string userRequest)
         {
-            Resulte<GeminiPrompt> resulte= await _geminiServise.AddGeminiForUserProductServise(productId, userRequest);
+            Resulte<GeminiPrompt> resulte= await _geminiServise.AddGeminiForUserProductServise(categoryId, userRequest);
             if (!resulte.IsSuccess)
-                return BadRequest(resulte.ErrorMessage);
-            if(resulte.Data==null)
             {
-                return Problem ("faild to load gemini try again");
+                if(resulte.ErrorMessage.Equals("Server error"))
+                {
+                    return Problem("faild to load gemini try again");
+                }
+                 return BadRequest(resulte.ErrorMessage);
             }
             return Ok(resulte.Data);
         }
 
+
+        // GET: api/<GeminiController>
+        [HttpPost("category")]
+        public async Task<ActionResult<GeminiPrompt>> CreateUserPromptCategory(string userRequest, long categoryId)
+        {
+            Resulte<GeminiPrompt> resulte = await _geminiServise.AddGeminiForUserFillCategoryServise( userRequest, categoryId);
+            if (!resulte.IsSuccess)
+            {
+                if (resulte.ErrorMessage.Equals("Server error"))
+                {
+                    return Problem("faild to load gemini try again");
+                }
+                return BadRequest(resulte.ErrorMessage);
+            }
+            return Ok(resulte.Data);
+        }
+
+
+        // GET: api/<GeminiController>
+        [HttpPost("basicSite")]
+        public async Task<ActionResult<GeminiPrompt>> CreateUserPromptBasicSite(string userRequest)
+        {
+            Resulte<GeminiPrompt> resulte = await _geminiServise.AddGeminiForUserFillBasicSiteServise(userRequest);
+            if (!resulte.IsSuccess)
+            {
+                if (resulte.ErrorMessage.Equals("Server error"))
+                {
+                    return Problem("faild to load gemini try again");
+                }
+                return BadRequest(resulte.ErrorMessage);
+            }
+            return Ok(resulte.Data);
+        }
         // GET api/<GeminiController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<GeminiPrompt>> Get(int id)
+        public async Task<ActionResult<GeminiPrompt>> Get(long id)
         {
             GeminiPrompt? gemini = await _geminiServise.GetByIdPromptServise(id);
 
@@ -46,25 +81,71 @@ namespace WebApiShope.Controllers
             return Ok(gemini);
         }
 
-        //// POST api/<GeminiController>)
-        //[HttpPost("addNewProduct")]
-        //public void Post([FromBody] string value)
-        //{
-
-        //}
-
+     
         // PUT api/<GeminiController>/5
-        [HttpPut("{id}")]
-        public async Task UpdatePrompt(long promptId, string userRequest)
+        [HttpPut("{id}/userProduct")]
+        public async Task<ActionResult> UpdatePromptForProduct(long promptId, string userRequest)
         {
 
-            await _geminiServise.AddGeminiForUserProductServise(promptId, userRequest);
+            Resulte<GeminiPrompt> respone= await _geminiServise.AddGeminiForUserProductServise(promptId, userRequest);
+            if(!respone.IsSuccess)
+            {
+                if(respone.ErrorMessage.Equals("Server error"))
+                {
+                  return Problem("faild to load gemini try again");
+                }
+                return BadRequest(respone.ErrorMessage);
+            }
+            return Ok();
 
         }
-        //// DELETE api/<GeminiController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+
+
+
+        // PUT api/<GeminiController>/5
+        [HttpPut("{id}/basicSite")]
+        public async Task<ActionResult> UpdatePromptBasicSite(long promptId, string userRequest)
+        {
+
+            Resulte<GeminiPrompt> respone = await _geminiServise.UpdateGeminiForUserBasicSiteServise(promptId, userRequest);
+            if (!respone.IsSuccess)
+            {
+                if (respone.ErrorMessage.Equals("Server error"))
+                {
+                    return Problem("faild to load gemini try again");
+                }
+                return BadRequest(respone.ErrorMessage);
+            }
+            return Ok();
+
+        }
+
+        // PUT api/<GeminiController>/5
+        [HttpPut("{id}/category")]
+        public async Task<ActionResult> UpdatePromptCategory(long promptId, string userRequest)
+        {
+
+            Resulte<GeminiPrompt> respone = await _geminiServise.UpdateGeminiForUserCategoryServise(promptId, userRequest);
+            if (!respone.IsSuccess)
+            {
+                if (respone.ErrorMessage.Equals("Server error"))
+                {
+                    return Problem("faild to load gemini try again");
+                }
+                return BadRequest(respone.ErrorMessage);
+            }
+            return Ok();
+        }
+        // DELETE api/<GeminiController>/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult>  Delete(long id)
+        {
+            Resulte<GeminiPrompt> respone =await _geminiServise.DeletePromptServise(id);
+            if (!respone.IsSuccess)
+            {
+                BadRequest(respone.ErrorMessage);
+            }
+            return Ok();    
+        }
     }
 }

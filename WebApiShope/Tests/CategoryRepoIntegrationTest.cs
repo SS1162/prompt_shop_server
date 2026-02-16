@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -31,7 +31,7 @@ namespace Tests
             public async Task GetCategories_HappyPath_ReturnsFilteredItems()
             {
                 // Arrange
-                int mainCategoryId = 1;
+                long mainCategoryId = 1;
                 string search = "מחשבים";
 
                 // Act
@@ -82,7 +82,7 @@ namespace Tests
             [InlineData(999)]
             [InlineData(0)]
             [InlineData(-1)]
-            public async Task GetByID_InvalidOrMissingId_ReturnsNull(int id)
+            public async Task GetByID_InvalidOrMissingId_ReturnsNull(long id)
             {
                 // Act
                 var result = await _repository.GetByIDCategoriesReposetory(id);

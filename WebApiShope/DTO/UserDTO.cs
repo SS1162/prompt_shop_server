@@ -22,7 +22,9 @@ namespace DTO
          string LastName ,
 
         [Phone]
-         string Phone 
+         string Phone ,
+
+        long BasicID
 
     );
 }

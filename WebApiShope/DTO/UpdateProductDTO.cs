@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +8,8 @@ namespace DTO
 {
     public record UpdateProductDTO
     (
-         int ProductID ,
-         int CategoryID ,
+         long ProductID ,
+         long CategoryID ,
          string ProductsName ,
 
          float Price

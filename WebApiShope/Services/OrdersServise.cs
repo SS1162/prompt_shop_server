@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DTO;
 using Entities;
 using Repositories;
@@ -13,13 +13,13 @@ namespace Services
     public class OrdersServise : IOrdersServise
     {
 
-        IOrdersReposetory _orderRepository;
-        IMapper _mapper;
-        IUsersReposetory _usersReposetory;
-        IBasicSitesReposetory _basicSitesReposetory;
-        IProductsReposetory _productsReposetory;
-        IStatusesReposetory _statusesReposetory;
-        ICreatePrompt _createPrompt;
+        private readonly IOrdersReposetory _orderRepository;
+        private readonly IMapper _mapper;
+        private readonly IUsersReposetory _usersReposetory;
+        private readonly IBasicSitesReposetory _basicSitesReposetory;
+        private readonly IProductsReposetory _productsReposetory;
+        private readonly IStatusesReposetory _statusesReposetory;
+        private readonly ICreatePrompt _createPrompt;
 
         public OrdersServise(IOrdersReposetory orderRepository, IMapper mapper,
             IUsersReposetory usersReposetory, IBasicSitesReposetory basicSitesReposetory,
@@ -34,7 +34,7 @@ namespace Services
             _createPrompt = createPrompt;
         }
 
-        public async Task<FullOrderDTO> GetByIdOrderServise(int id)
+        public async Task<FullOrderDTO> GetByIdOrderServise(long id)
         {
             Order order = await _orderRepository.GetOrderByIdReposetory(id);
             return _mapper.Map<FullOrderDTO>(order);
@@ -80,7 +80,7 @@ namespace Services
             return Resulte<FullOrderDTO>.Success(_mapper.Map<FullOrderDTO>(orderFromReposetory));
         }
 
-        public async Task<Resulte<FullOrderDTO>> UpdateStatusServise(int id, FullOrderDTO order)
+        public async Task<Resulte<FullOrderDTO>> UpdateStatusServise(long id, FullOrderDTO order)
         {
             if (id != order.OrderID)
             {
@@ -132,7 +132,7 @@ namespace Services
             return Resulte<FullOrderDTO>.Success(null);
         }
 
-        public async Task<Resulte<IEnumerable<OrderItemDTO>>> GetOrderItemsServise(int orderId)
+        public async Task<Resulte<IEnumerable<OrderItemDTO>>> GetOrderItemsServise(long orderId)
         {
             Order checkIfIOrderinsist = await _orderRepository.GetOrderByIdReposetory(orderId);
             if (checkIfIOrderinsist == null)

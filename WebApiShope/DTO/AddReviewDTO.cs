@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace DTO
 {
     public record AddReviewDTO(
         [Required]
-           int OrderId,
+           long OrderId,
         [Required]
            int Score,
            string Note,

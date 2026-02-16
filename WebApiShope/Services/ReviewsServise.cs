@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DTO;
 using Entities;
 using Repositories;
@@ -12,9 +12,9 @@ namespace Services
 {
     public class ReviewsServise : IReviewsServise
     {
-        IReviewsReposetory _reviewsReposetory;
-        IMapper _mapper;
-        IOrdersReposetory _ordersReposetory;
+        private readonly IReviewsReposetory _reviewsReposetory;
+        private readonly IMapper _mapper;
+        private readonly IOrdersReposetory _ordersReposetory;
 
 
         public ReviewsServise(IReviewsReposetory reviewsReposetory, IMapper mapper, IOrdersReposetory ordersReposetory)
@@ -23,7 +23,7 @@ namespace Services
             this._mapper = mapper;
             _ordersReposetory = ordersReposetory;
         }
-        public async Task<Resulte<ReviewDTO>> AddReviewServise(int orderId, AddReviewDTO review)
+        public async Task<Resulte<ReviewDTO>> AddReviewServise(long orderId, AddReviewDTO review)
         {
             if (orderId != review.OrderId)
             {
@@ -44,7 +44,7 @@ namespace Services
             return Resulte<ReviewDTO>.Success(_mapper.Map<ReviewDTO>(reviewFromReposetory));
         }
 
-        public async Task<Resulte<ReviewDTO>> GetReviewByOrderIdServise(int orderId)
+        public async Task<Resulte<ReviewDTO>> GetReviewByOrderIdServise(long orderId)
         {
 
             Order? checkIfThereIsExistingOrder = await _ordersReposetory.GetOrderByIdReposetory(orderId);
@@ -56,7 +56,7 @@ namespace Services
 
             return Resulte<ReviewDTO>.Success(_mapper.Map<ReviewDTO>(review));
         }
-        public async Task<Resulte<ReviewDTO>> UpdateReviewServise(int id, ReviewDTO review)
+        public async Task<Resulte<ReviewDTO>> UpdateReviewServise(long id, ReviewDTO review)
         {
 
             if (id != review.ReviewId)

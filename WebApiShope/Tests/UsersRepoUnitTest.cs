@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using Moq;
 using FluentAssertions;
 using Repositories;
@@ -84,7 +84,7 @@ namespace Tests
         public async Task GetByIDUsersRepositories_UserDoesNotExist_ShouldReturnNull()
         {
             // Arrange
-            int nonExistingId = 999;
+            long nonExistingId = 999;
 
             // Act
             var result = await _repository.GetByIDUsersRepositories(nonExistingId);

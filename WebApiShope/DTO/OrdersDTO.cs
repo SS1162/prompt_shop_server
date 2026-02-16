@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,12 +10,12 @@ namespace DTO
     public record OrdersDTO
     (
         [Required]
-         int UserID,
+         long UserID,
          [Required]
          float OrderSum,
 
         [Required]
-         int BasicID,
+         long BasicID,
 
         [Required]
          List<AddToCartDTO> Products

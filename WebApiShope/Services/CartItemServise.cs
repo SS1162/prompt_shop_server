@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DTO;
 using Entities;
 using Repositories;
@@ -15,11 +15,11 @@ namespace Services
     {
 
 
-        ICartsReposetory _cartsReposetory;
-        IUsersReposetory _usersReposetory;
-        IMapper _mapper;
-        IProductsReposetory _productsReposetory;
-        IPlatformsReposetory _platformsReposetory;
+        private readonly ICartsReposetory _cartsReposetory;
+        private readonly IUsersReposetory _usersReposetory;
+        private readonly IMapper _mapper;
+        private readonly IProductsReposetory _productsReposetory;
+        private readonly IPlatformsReposetory _platformsReposetory;
         public CartItemServise(ICartsReposetory cartsReposetory, IMapper mapper, IUsersReposetory usersReposetory, IProductsReposetory productsReposetory, IPlatformsReposetory platformsReposetory)
         {
             this._cartsReposetory = cartsReposetory;
@@ -29,12 +29,12 @@ namespace Services
             this._platformsReposetory = platformsReposetory;
 
         }
-        public async Task<CartItemDTO?> GetByIdServise(int id)
+        public async Task<CartItemDTO?> GetByIdServise(long id)
         {
             CartItem? cartItem = await _cartsReposetory.GetByIdReposetory(id);
             return _mapper.Map<CartItemDTO>(cartItem);
         }
-        public async Task<Resulte<IEnumerable<CartItemDTO>>> GetUserCartServise(int userId)
+        public async Task<Resulte<IEnumerable<CartItemDTO>>> GetUserCartServise(long userId)
         {
             User? checkIfUserInsist = await _usersReposetory.GetByIDUsersRepositories(userId);
             if (checkIfUserInsist == null)
@@ -86,7 +86,7 @@ namespace Services
             return Resulte<CartItemDTO>.Success(_mapper.Map<CartItemDTO>(created));
         }
 
-        public async Task<Resulte<CartItemDTO?>> ChangeProductToNotValidCartServise(int cartItemId)
+        public async Task<Resulte<CartItemDTO?>> ChangeProductToNotValidCartServise(long cartItemId)
         {
             CartItem? checkIfIDinsist = await _cartsReposetory.GetByIdReposetory(cartItemId);
             if (checkIfIDinsist == null)
@@ -102,7 +102,7 @@ namespace Services
 
         }
 
-        public async Task<Resulte<CartItemDTO?>> ChangeProductToValidCartServise(int cartItemId)
+        public async Task<Resulte<CartItemDTO?>> ChangeProductToValidCartServise(long cartItemId)
         {
             CartItem? checkIfIDinsist = await _cartsReposetory.GetByIdReposetory(cartItemId);
             if (checkIfIDinsist == null)
@@ -117,7 +117,7 @@ namespace Services
             return Resulte<CartItemDTO>.Success(null);
         }
 
-        public async Task<Resulte<CartItemDTO?>> DeleteUserCartServise(int cartItemId)
+        public async Task<Resulte<CartItemDTO?>> DeleteUserCartServise(long cartItemId)
         {
 
             CartItem? checkIfIDinsist = await _cartsReposetory.GetByIdReposetory(cartItemId);
@@ -125,7 +125,7 @@ namespace Services
             {
                 return Resulte<CartItemDTO?>.Failure("the cart item id not insist");
             }
-            await _cartsReposetory.DeleteUserCartReposetory(cartItemId);
+            await _cartsReposetory.DeleteUserCartItemReposetory(cartItemId);
             return Resulte<CartItemDTO?>.Success(null);
 
         }

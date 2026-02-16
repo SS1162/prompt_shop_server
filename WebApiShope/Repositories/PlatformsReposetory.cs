@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +10,13 @@ namespace Repositories
 {
     public class PlatformsReposetory : IPlatformsReposetory
     {
-        MyShop330683525Context _DBContext;
+        private readonly MyShop330683525Context _DBContext;
         public PlatformsReposetory(MyShop330683525Context _DBContext)
         {
             this._DBContext = _DBContext;
         }
 
-        async public Task<Platform?> GetByIDPlatformsReposetory(int id)
+        async public Task<Platform?> GetByIDPlatformsReposetory(long id)
         {
             return await _DBContext.Platforms.FirstOrDefaultAsync(x => x.PlatformId == id);
         }
@@ -33,13 +33,13 @@ namespace Repositories
             return platform;
         }
 
-        async public Task UpdatePlatformReposetory(int id, Platform platform)
+        async public Task UpdatePlatformReposetory(long id, Platform platform)
         {
             _DBContext.Platforms.Update(platform);
             await _DBContext.SaveChangesAsync();
         }
 
-        async public Task DeletePlatformReposetory(int id)
+        async public Task DeletePlatformReposetory(long id)
         {
             Platform platformObjectToDelete = await _DBContext.Platforms.FirstOrDefaultAsync(x => x.PlatformId == id);
             _DBContext.Platforms.Remove(platformObjectToDelete);

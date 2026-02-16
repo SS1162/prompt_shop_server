@@ -19,6 +19,8 @@ public partial class Category
 
     public string CategoryDescreption { get; set; }
 
+    public virtual ICollection<GeminiPrompt> GeminiPrompts { get; set; } = new List<GeminiPrompt>();
+
     public virtual MainCategory MainCategory { get; set; }
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();

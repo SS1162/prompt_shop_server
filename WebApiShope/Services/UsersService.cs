@@ -74,14 +74,22 @@ namespace Services
 
             PasswordDTO passwordForCheckStrength = new PasswordDTO();
             passwordForCheckStrength.UserPassward = userToUpdate.Password;
-            if (_passwordsService.CheckPasswordStrength(passwordForCheckStrength).Data < 2)
+            if (passwordForCheckStrength.UserPassward!=null||_passwordsService.CheckPasswordStrength(passwordForCheckStrength).Data < 2)
             {
                 Resulte<UserDTO>.Failure("The password is not strong enough");
             }
             if (id != userToUpdate.UserId)
                 Resulte<UserDTO>.Failure("The id'es are diffrent");
-
+            User? checkIfUserExist = await _usersReposetory.GetByIDUsersRepositories(id);
+            if(checkIfUserExist==null)
+            {
+                return Resulte<UserDTO>.Failure("The user ide's is incorect");
+            }
             User userToRposetory = _mapper.Map<User>(userToUpdate);
+            if(userToUpdate.Password==null)
+            {
+                userToRposetory.Password = checkIfUserExist.Password;
+            }
             User? checkUserValidtion = await _usersReposetory.GetByIDUsersRepositories(id);
             if (checkUserValidtion == null)
                 Resulte<UserDTO>.Failure("The user id dont exist");
@@ -92,6 +100,15 @@ namespace Services
             await _usersReposetory.UpdateUsersRepositories(id, userToRposetory);
             return Resulte<UserDTO>.Success(null);
 
+        }
+
+
+        public async Task<UserDTO> SignInWithGoogleServise(RegisterUserDTO registerUser)
+        {
+            User userToReposetory = _mapper.Map<User>(registerUser);
+            userToReposetory.UserName = userToReposetory.UserName.ToLower();
+            User userForReturn = await _usersReposetory.SignInWithGoogleRepositories(userToReposetory);
+            return _mapper.Map<UserDTO>(userForReturn);
         }
 
     }

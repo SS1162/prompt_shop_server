@@ -10,5 +10,6 @@ namespace Services
         Task<UserDTO> GetByIDUsersService(int id);
         Task<UserDTO> LoginUsersService(LoginUserDTO logInUser);
         Task<Resulte<UserDTO>> UpdateUsersService(int id, UpdateUserDTO userToUpdate);
+        Task<UserDTO> SignInWithGoogleServise(RegisterUserDTO registerUser);
     }
 }

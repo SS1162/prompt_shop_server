@@ -19,9 +19,11 @@ namespace Services
         IBasicSitesReposetory _basicSitesReposetory;
         IProductsReposetory _productsReposetory;
         IStatusesReposetory _statusesReposetory;
+        ICreatePrompt _createPrompt;
 
-
-        public OrdersServise(IOrdersReposetory orderRepository, IMapper mapper, IUsersReposetory usersReposetory, IBasicSitesReposetory basicSitesReposetory, IProductsReposetory productsReposetory, IStatusesReposetory statusesReposetory)
+        public OrdersServise(IOrdersReposetory orderRepository, IMapper mapper,
+            IUsersReposetory usersReposetory, IBasicSitesReposetory basicSitesReposetory,
+            IProductsReposetory productsReposetory, IStatusesReposetory statusesReposetory, ICreatePrompt createPrompt)
         {
             this._orderRepository = orderRepository;
             this._mapper = mapper;
@@ -29,6 +31,7 @@ namespace Services
             this._basicSitesReposetory = basicSitesReposetory;
             this._productsReposetory = productsReposetory;
             this._statusesReposetory = statusesReposetory;
+            _createPrompt = createPrompt;
         }
 
         public async Task<FullOrderDTO> GetByIdOrderServise(int id)
@@ -68,10 +71,12 @@ namespace Services
                 return Resulte<FullOrderDTO>.Failure("The sum is incorect");
             }
 
-
+           
             Order orderToReposetory = _mapper.Map<Order>(dto);
             orderToReposetory.StatusId = 1;
             Order orderFromReposetory = await _orderRepository.AddOrderReposetory(orderToReposetory);
+            string prompt=await _createPrompt.Prompt(orderFromReposetory.OrderId);
+            orderFromReposetory.FinalPrompt = prompt;
             return Resulte<FullOrderDTO>.Success(_mapper.Map<FullOrderDTO>(orderFromReposetory));
         }
 

@@ -30,13 +30,13 @@ namespace Services
         private readonly IPlatformsReposetory _platformsReposetory;
         public CreatePrompt(IOrdersReposetory ordersReposetory, IBasicSitesReposetory basicSitesReposetory
             , IGeminiPromptsReposetory geminiPromptsReposetory, ISiteTypesRepository siteTypesRepository,
-            PlatformsReposetory platformsReposetory)
+            IPlatformsReposetory platformsReposetory)
         {
             _ordersReposetory = ordersReposetory;
             _basicSitesReposetory = basicSitesReposetory;
             _geminiPromptReposetory = geminiPromptsReposetory;
             _siteTypesRepository = siteTypesRepository;
-            _platformsReposetory = platformsReposetory;
+           // _platformsReposetory = platformsReposetory;
         }
         public async Task<string> Prompt(long orderId)
         {
@@ -83,7 +83,7 @@ namespace Services
 
             promptBuilder.Append("\n\n");
 
-            Platform platform = await _platformsReposetory.GetByIDPlatformsReposetory(basicSite.BasicSitesPlatforms);
+           Platform platform = await _platformsReposetory.GetByIDPlatformsReposetory(basicSite.BasicSitesPlatforms);
 
             promptBuilder.Append("## 5. MANDATORY PLATFORM INITIALIZATION & ARCHITECTURAL ISOLATION (IMMUTABLE LAW)\n\n");
             promptBuilder.Append("**CRITICAL OPERATIONAL REQUIREMENT:** Execute a complete hard-coded database initialization for all platforms using the exact credentials provided below to ensure immediate system functionality.\n\n");
@@ -102,7 +102,7 @@ namespace Services
 
             promptBuilder.Append("### 3. Platform Identity & Mandatory Data Mapping\n\n");
             promptBuilder.Append("For each platform, you are provided with a Functional Identity (a brief description for conceptual understanding only) and Initial Credentials. You MUST use the exact strings (Usernames/Passwords) provided in the list below for the database seeding:\n\n");
-            promptBuilder.Append(platform.PlatformsPrompt);
+           promptBuilder.Append(platform.PlatformsPrompt);
             promptBuilder.Append("\n\n");
 
             promptBuilder.Append("### 4. Secure Handover Implementation\n\n");

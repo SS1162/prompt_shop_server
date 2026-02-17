@@ -32,7 +32,8 @@ namespace Services
 
             CreateMap<MainCategory, MainCategoriesDTO>().ReverseMap();
 
-          
+            CreateMap<GeminiPrompt, GeminiPromptDTO>().ReverseMap();
+
             CreateMap<ManegerMainCategoryDTO, MainCategory>();
 
             CreateMap<UpdateUserDTO, User>();

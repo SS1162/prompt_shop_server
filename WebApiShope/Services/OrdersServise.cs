@@ -104,7 +104,7 @@ namespace Services
                 Resulte<FullOrderDTO>.Failure("The basic site id not insist");
             }
 
-            Status? checkIfIStatusensist = await _statusesReposetory.GetStatusByID(order.Status);
+            Status? checkIfIStatusensist = await _statusesReposetory.GetStatusByID(order.StatusId);
             if (checkIfIBasicSitensist == null)
             {
                 Resulte<FullOrderDTO>.Failure("The basic site id not insist");

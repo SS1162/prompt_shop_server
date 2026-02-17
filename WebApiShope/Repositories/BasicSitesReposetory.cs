@@ -17,7 +17,7 @@ namespace Repositories
         }
         async public Task<BasicSite?> GetByIDBasicSiteReposetory(long id)
         {
-            return await _DBContext.BasicSites.Include(x => x.BasicSitesPlatforms)
+            return await _DBContext.BasicSites.Include(x => x.BasicSitesPlatformsNavigation)
                 .Include(x => x.SiteType)
                 .FirstOrDefaultAsync(x => x.BasicSiteId == id);
 

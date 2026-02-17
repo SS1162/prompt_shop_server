@@ -24,9 +24,11 @@ builder.Services.AddScoped<IGeminiPromptsReposetory, GeminiPromptsReposetory>();
 
 builder.Services.AddScoped<ICreatePrompt, CreatePrompt>();
 
+builder.Services.AddScoped<IChatBotServise, ChatBotServise>();
 
 builder.Services.AddScoped<IGeminiServise, GeminiServise>();
 
+builder.Services.AddScoped<IGeminiSdkChatService, GeminiSdkChatService>();
 
 builder.Services.AddScoped<IRatingsReposetory, RatingsReposetory>();
 

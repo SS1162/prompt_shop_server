@@ -67,7 +67,8 @@ namespace Services
          {
             Temperature = 0.2f,
           ResponseMimeType = "application/json"
-      }
+               
+            }
              );
 
                 return Resulte<string>.Failure(response.Candidates[0].Content.Parts[0].Text);

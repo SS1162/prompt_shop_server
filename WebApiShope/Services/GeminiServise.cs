@@ -1,3 +1,4 @@
+using AutoMapper;
 using DTO;
 using Entities;
 using Microsoft.Identity.Client;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Services
@@ -16,16 +18,18 @@ namespace Services
         private readonly IGeminiPromptsReposetory _geminiPromptsReposetory;
         private readonly ICategoriesReposetory _categoriesReposetory;
         private readonly IMainCategoriesReposetory _mainCategoriesReposetory;
+        private readonly IMapper _mapper;
         public GeminiServise(Igemini gemini, ICategoriesReposetory categoriesReposetory,
-            IGeminiPromptsReposetory geminiPromptsReposetory, IMainCategoriesReposetory mainCategoriesReposetory    )
+            IGeminiPromptsReposetory geminiPromptsReposetory, IMainCategoriesReposetory mainCategoriesReposetory ,IMapper mapper   )
         {
             this._gemini = gemini;
             this._categoriesReposetory = categoriesReposetory;
             this._geminiPromptsReposetory = geminiPromptsReposetory;
             this._mainCategoriesReposetory = mainCategoriesReposetory;
+            this._mapper = mapper;
         }
 
-        public async Task<Resulte<GeminiPrompt>> AddGeminiForUserProductServise(long categoryId, string userRequest)
+        public async Task<Resulte<GeminiPromptDTO>> AddGeminiForUserProductServise(long categoryId, string userRequest)
         {
             Category? category = await _categoriesReposetory.GetByIDCategoriesReposetory(categoryId);
             if (category == null)
@@ -43,17 +47,21 @@ namespace Services
                 Resulte<GeminiPrompt>.Failure("Server error");
             }
             GeminiPrompt prompt = new GeminiPrompt();
-            prompt.Prompt = resulte.Data;
+            string jsonString = resulte.Data;
+            Technical_value paseJSON = JsonSerializer.Deserialize<Technical_value>(jsonString);
+            prompt.Prompt = paseJSON.technical_value;
             prompt.CategoryId = categoryId;
            
             GeminiPrompt resulteFromReposetory = await _geminiPromptsReposetory.AddPromptReposetory(prompt);
-             return Resulte<GeminiPrompt>.Success(resulteFromReposetory);
+
+            GeminiPromptDTO promptForReturn = _mapper.Map<GeminiPromptDTO>(resulteFromReposetory);
+            return Resulte<GeminiPromptDTO>.Success(promptForReturn);
         }
 
 
 
 
-        public async Task<Resulte<GeminiPrompt>> AddGeminiForUserFillCategoryServise(string userRequest, long categoryId)
+        public async Task<Resulte<GeminiPromptDTO>> AddGeminiForUserFillCategoryServise(string userRequest, long categoryId)
         {
             Category? category = await _categoriesReposetory.GetByIDCategoriesReposetory(categoryId);
             if (category == null)
@@ -79,14 +87,19 @@ namespace Services
                 Resulte<GeminiPrompt>.Failure("Server error");
             }
             GeminiPrompt prompt = new GeminiPrompt();
-            prompt.Prompt = resulte.Data;
+            string jsonString = resulte.Data;
+            Technical_value paseJSON = JsonSerializer.Deserialize<Technical_value>(jsonString);
+            prompt.Prompt = paseJSON.technical_value;
+            
             prompt.CategoryId = categoryId;
 
             GeminiPrompt resulteFromReposetory = await _geminiPromptsReposetory.AddPromptReposetory(prompt);
-            return Resulte<GeminiPrompt>.Success(resulteFromReposetory);
+
+            GeminiPromptDTO promptForReturn = _mapper.Map<GeminiPromptDTO>(resulteFromReposetory);
+            return Resulte<GeminiPromptDTO>.Success(promptForReturn);
         }
 
-        public async Task<Resulte<GeminiPrompt>> AddGeminiForUserFillBasicSiteServise(string userRequest)
+        public async Task<Resulte<GeminiPromptDTO>> AddGeminiForUserFillBasicSiteServise(string userRequest)
         {
             
             Resulte<string> resulte = await _gemini.RunGeminiForFillBasicSite(userRequest);
@@ -100,10 +113,13 @@ namespace Services
                 Resulte<GeminiPrompt>.Failure("Server error");
             }
             GeminiPrompt prompt = new GeminiPrompt();
-            prompt.Prompt = resulte.Data;
+            string jsonString =resulte.Data;
+            Technical_value paseJSON = JsonSerializer.Deserialize<Technical_value>(jsonString);
+            prompt.Prompt = paseJSON.technical_value;
 
             GeminiPrompt resulteFromReposetory = await _geminiPromptsReposetory.AddPromptReposetory(prompt);
-            return Resulte<GeminiPrompt>.Success(resulteFromReposetory);
+            GeminiPromptDTO promptForReturn = _mapper.Map<GeminiPromptDTO>(resulteFromReposetory);
+            return Resulte<GeminiPromptDTO>.Success(promptForReturn);
         }
 
 
@@ -126,7 +142,10 @@ namespace Services
             {
                 return Resulte<GeminiPrompt>.Failure("Server error");
             }
-            checkIfThePromptExist.Prompt = resulte.Data;
+            string jsonString = resulte.Data;
+            Technical_value paseJSON = JsonSerializer.Deserialize<Technical_value>(jsonString);
+            checkIfThePromptExist.Prompt = paseJSON.technical_value;
+   
           
                await _geminiPromptsReposetory.UpdatePromptReposetory(promptId, checkIfThePromptExist);
                 return Resulte<GeminiPrompt>.Success(null);
@@ -168,7 +187,9 @@ namespace Services
             {
                 return Resulte<GeminiPrompt>.Failure("Server error");
             }
-            checkIfThePromptExist.Prompt = resulte.Data;
+            string jsonString = resulte.Data;
+            Technical_value paseJSON = JsonSerializer.Deserialize<Technical_value>(jsonString);
+            checkIfThePromptExist.Prompt = paseJSON.technical_value;
 
             await _geminiPromptsReposetory.UpdatePromptReposetory(promptId, checkIfThePromptExist);
             return Resulte<GeminiPrompt>.Success(null);
@@ -192,14 +213,16 @@ namespace Services
             {
                 return Resulte<GeminiPrompt>.Failure("Server error");
             }
-            checkIfThePromptExist.Prompt = resulte.Data;
+            string jsonString = resulte.Data;
+            Technical_value paseJSON = JsonSerializer.Deserialize<Technical_value>(jsonString);
+            checkIfThePromptExist.Prompt = paseJSON.technical_value;
 
             await _geminiPromptsReposetory.UpdatePromptReposetory(promptId, checkIfThePromptExist);
             return Resulte<GeminiPrompt>.Success(null);
         }
-        public async Task<GeminiPrompt?> GetByIdPromptServise(long promptId)
+        public async Task<GeminiPromptDTO?> GetByIdPromptServise(long promptId)
         {
-           return  await _geminiPromptsReposetory.GetByIDPromptReposetory(promptId);
+           return  _mapper.Map< GeminiPromptDTO> (await _geminiPromptsReposetory.GetByIDPromptReposetory(promptId));
         }
 
         public async Task<Resulte<GeminiPrompt>> DeletePromptServise(long promptId)

@@ -30,13 +30,19 @@ namespace Repositories
 
         public async Task<Review?> GetByidReviewReposetory(long id)
         {
-            return await _DBcontext.Reviews.FirstOrDefaultAsync(x => x.ReviewId == id);
+            return await _DBcontext.Reviews.AsNoTracking().FirstOrDefaultAsync(x => x.ReviewId == id);
+        }
+
+        public async Task<IEnumerable<Review>> GetAllReviewsReposetory(int limit, int currentPage)
+        {
+            IEnumerable<Review> resulte= await _DBcontext.Reviews.Skip(limit*(currentPage-1)).Take(limit).ToListAsync();
+            return resulte;
         }
 
         public async Task<Review> GetReviewByOrderIdReposetory(long orderId)
         {
-            Order orderForReviews = await _DBcontext.Orders.FirstOrDefaultAsync(r => r.OrderId == orderId);
-                return await _DBcontext.Reviews.FirstOrDefaultAsync(r => r.ReviewId == orderForReviews.ReviewId);
+            Order orderForReviews = await _DBcontext.Orders.AsNoTracking().FirstOrDefaultAsync(r => r.OrderId == orderId);
+                return await _DBcontext.Reviews.AsNoTracking().FirstOrDefaultAsync(r => r.ReviewId == orderForReviews.ReviewId);
          
         }
 

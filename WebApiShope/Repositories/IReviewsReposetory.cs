@@ -1,4 +1,5 @@
 using Entities;
+using System.Collections.Generic;
 
 namespace Repositories
 {
@@ -8,5 +9,6 @@ namespace Repositories
         Task<Review> GetReviewByOrderIdReposetory(long orderId);
         Task UpdateReviewReposetory(long id ,Review review);
         Task<Review?> GetByidReviewReposetory(long id);
+        Task<IEnumerable<Review>> GetAllReviewsReposetory(int limit, int currentPage);
     }
 }

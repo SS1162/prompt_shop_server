@@ -71,7 +71,7 @@ namespace Services
             }
              );
 
-                return Resulte<string>.Failure(response.Candidates[0].Content.Parts[0].Text);
+                return Resulte<string>.Success(response.Candidates[0].Content.Parts[0].Text);
     }
         catch (Exception ex)
           {

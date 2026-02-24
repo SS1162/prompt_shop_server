@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace DTO
 {
@@ -13,6 +14,6 @@ namespace DTO
         [Required]
            int Score,
            string Note,
-           string ReviewImageUrl
+           IFormFile? ReviewImg
        );
 }

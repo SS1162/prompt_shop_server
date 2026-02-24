@@ -11,9 +11,9 @@ namespace DTO
     (
         [Required]
      string SiteName,
-    string UserDescreption,
-      [Required]
-     long SiteTypeID,
+    string? UserDescreption,
+      
+     long? SiteTypeID,
         [Required]
      long PlatformID
 );

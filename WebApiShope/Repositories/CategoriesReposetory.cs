@@ -34,12 +34,12 @@ namespace Repositories
 
         async public Task<Category?> GetByMainCategoriesIDReposetory(long id)
         {
-            return await _DBContext.Categories.FirstOrDefaultAsync(x => x.MainCategoryId == id);
+            return await _DBContext.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.MainCategoryId == id);
 
         }
         async public Task<Category?> GetByIDCategoriesReposetory(long id)
         {
-            return await _DBContext.Categories.FirstOrDefaultAsync(x => x.CategoryId == id);
+            return await _DBContext.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.CategoryId == id);
 
         }
 

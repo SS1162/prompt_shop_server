@@ -26,7 +26,7 @@ namespace Repositories
         public async Task<User?> GetByIDUsersRepositories(long id)
         {
           
-            return  await _MyShop330683525Context.Users.FirstOrDefaultAsync(x=>x.UserId==id);
+            return  await _MyShop330683525Context.Users.AsNoTracking().FirstOrDefaultAsync(x=>x.UserId==id);
 
         }
 
@@ -43,7 +43,7 @@ namespace Repositories
         }
         public async Task<bool> CheckIfUsersInsistalrady(string user)
         {
-           var resulte =await _MyShop330683525Context.Users.FirstOrDefaultAsync(x => x.UserName == user.ToLower());
+           var resulte =await _MyShop330683525Context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.UserName == user.ToLower());
             if(resulte == null)
             {
                 return true;
@@ -55,7 +55,7 @@ namespace Repositories
 
         public async Task<User?> LoginUsersRepositories(User LogInUser)
         {
-            var user = await _MyShop330683525Context.Users.FirstOrDefaultAsync(x => LogInUser.UserName == x.UserName &&
+            var user = await _MyShop330683525Context.Users.AsNoTracking().FirstOrDefaultAsync(x => LogInUser.UserName == x.UserName &&
             LogInUser.Password == x.Password);
             return user;
         }

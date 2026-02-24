@@ -17,15 +17,16 @@ namespace Repositories
         }
         async public Task<BasicSite?> GetByIDBasicSiteReposetory(long id)
         {
-            return await _DBContext.BasicSites.Include(x => x.BasicSitesPlatformsNavigation)
+            return await _DBContext.BasicSites.AsNoTracking().Include(x => x.BasicSitesPlatformsNavigation)
                 .Include(x => x.SiteType)
+                .Include(x => x.UserDescriptionNavigation)
                 .FirstOrDefaultAsync(x => x.BasicSiteId == id);
 
         }
 
         async public Task<BasicSite?> CheckIfHasPlatformByPlatformID(long id)
         {
-            return await _DBContext.BasicSites.FirstOrDefaultAsync(x => x.BasicSitesPlatforms == id);
+            return await _DBContext.BasicSites.AsNoTracking().FirstOrDefaultAsync(x => x.BasicSitesPlatforms == id);
           
 
         }

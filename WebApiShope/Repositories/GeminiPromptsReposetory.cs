@@ -42,7 +42,7 @@ namespace Repositories
         }
         async public Task<GeminiPrompt?> GetByIDPromptReposetory(long id)
         {
-            return await _DBContext.GeminiPrompts.FirstOrDefaultAsync(x => x.PromptId == id);
+            return await _DBContext.GeminiPrompts.AsNoTracking().FirstOrDefaultAsync(x => x.PromptId == id);
        
 
         }

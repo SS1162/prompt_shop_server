@@ -70,20 +70,29 @@ namespace Services
 
         async public Task<Resulte<UserDTO>> UpdateUsersService(long id, UpdateUserDTO userToUpdate)
         {
+          
 
 
-            PasswordDTO passwordForCheckStrength = new PasswordDTO();
-            passwordForCheckStrength.UserPassward = userToUpdate.Password;
-            if (passwordForCheckStrength.UserPassward!=null||_passwordsService.CheckPasswordStrength(passwordForCheckStrength).Data < 2)
-            {
-                Resulte<UserDTO>.Failure("The password is not strong enough");
-            }
             if (id != userToUpdate.UserId)
-                Resulte<UserDTO>.Failure("The id'es are diffrent");
+                return Resulte<UserDTO>.Failure("The id'es are diffrent");
             User? checkIfUserExist = await _usersReposetory.GetByIDUsersRepositories(id);
             if(checkIfUserExist==null)
             {
                 return Resulte<UserDTO>.Failure("The user ide's is incorect");
+            }
+            if (userToUpdate.Password != null)
+            {
+                PasswordDTO passwordForCheckStrength = new PasswordDTO();
+                passwordForCheckStrength.UserPassward = userToUpdate.Password;
+                if (passwordForCheckStrength.UserPassward != null && _passwordsService.CheckPasswordStrength(passwordForCheckStrength).Data < 2)
+                {
+                    return Resulte<UserDTO>.Failure("The password is not strong enough");
+                }
+            }
+            else
+            {
+            userToUpdate = new UpdateUserDTO(userToUpdate.UserId, checkIfUserExist.Password, userToUpdate.UserName,
+            userToUpdate.FirstName,userToUpdate.LastName,userToUpdate.Phone,userToUpdate.BasicID);     
             }
             User userToRposetory = _mapper.Map<User>(userToUpdate);
             if(userToUpdate.Password==null)
@@ -92,10 +101,10 @@ namespace Services
             }
             User? checkUserValidtion = await _usersReposetory.GetByIDUsersRepositories(id);
             if (checkUserValidtion == null)
-                Resulte<UserDTO>.Failure("The user id dont exist");
+                return Resulte<UserDTO>.Failure("The user id dont exist");
 
             if (checkUserValidtion.UserName != userToRposetory.UserName)
-                Resulte<UserDTO>.Failure("The user name make diifrent");
+                return Resulte<UserDTO>.Failure("The user name make diifrent");
 
             await _usersReposetory.UpdateUsersRepositories(id, userToRposetory);
             return Resulte<UserDTO>.Success(null);

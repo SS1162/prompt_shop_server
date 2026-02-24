@@ -10,7 +10,7 @@ namespace DTO
     public record UserDTO
     (
         [Required]
-         string UserID ,
+         long UserID ,
 
         [EmailAddress]
         [Required]

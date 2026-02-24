@@ -19,7 +19,7 @@ namespace Repositories
 
         async public Task<Status?> GetStatusByID(long statusID)
         {
-            return await _DBContext.Statuses.FirstOrDefaultAsync(x => x.StatusId == statusID);
+            return await _DBContext.Statuses.AsNoTracking().FirstOrDefaultAsync(x => x.StatusId == statusID);
         }
 
     }

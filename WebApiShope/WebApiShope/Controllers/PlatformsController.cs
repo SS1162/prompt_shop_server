@@ -1,4 +1,4 @@
-using DTO;
+﻿using DTO;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -20,7 +20,7 @@ namespace WebApiShope.Controllers
         public async Task<ActionResult<IEnumerable<PlatformsDTO>>> Get()
         {
            IEnumerable < PlatformsDTO > platformList = await _platformsServise.GetPlatformsServise();
-            if (platformList.Any())
+            if (!platformList.Any())
             {
                 return NoContent();
             }

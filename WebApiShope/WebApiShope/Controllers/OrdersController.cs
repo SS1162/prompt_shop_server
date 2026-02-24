@@ -1,4 +1,4 @@
-using Azure;
+﻿using Azure;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -12,9 +12,11 @@ namespace WebApiShope.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrdersServise _ordersServise;
-        public OrdersController(IOrdersServise ordersServise)
+        private readonly ICreatePrompt _createPrompt;
+        public OrdersController(IOrdersServise ordersServise, ICreatePrompt createPrompt)
         {
             this._ordersServise = ordersServise;
+            this._createPrompt = createPrompt;
         }
         // GET: api/<OrdersController>
         [HttpGet("{orderId}/orderItems")]
@@ -32,11 +34,37 @@ namespace WebApiShope.Controllers
             return Ok(reaspone.Data);
         }
         // GET api/<OrdersController>/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<FullOrderDTO>> GetByID(long id)
+        [HttpGet("userID/{id}")]
+        public async Task<ActionResult<IEnumerable<FullOrderDTO>>> GetOrderByUserID(long id)
         {
-            FullOrderDTO order = await _ordersServise.GetByIdOrderServise(id);
+            IEnumerable<FullOrderDTO> order = await _ordersServise.GetByUserIdOrderServise(id);
+            if (!order.Any() )
+            {
+                return NoContent();
+            }
+            return Ok(order);
+        }
+
+        // GET api/<OrdersController>/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<OrderDetielsDTO>> GetByIDOrdersDitels(long id)
+        {
+            OrderDetielsDTO order = await _ordersServise.GetByIdOrderServise(id);
             if (order == null)
+            {
+                return NoContent();
+            }
+            return Ok(order);
+        }
+
+
+       
+        //for admin only
+        [HttpGet("admin")]
+        public async Task<ActionResult<IEnumerable<FullOrderDTO>>> GetAllOrders()
+        {
+            IEnumerable<FullOrderDTO> order = await _ordersServise.GetAllOrders();
+            if (!order.Any())
             {
                 return NoContent();
             }
@@ -54,8 +82,17 @@ namespace WebApiShope.Controllers
                 return BadRequest(reaspone.ErrorMessage);
             }
           
-            return CreatedAtAction(nameof(GetByID), new { id = reaspone.Data.OrderID}, reaspone.Data);
+            return CreatedAtAction(nameof(GetByIDOrdersDitels), new { id = reaspone.Data.OrderID}, reaspone.Data);
 
+        }
+
+        // POST api/<OrdersController>/5/prompt
+        [HttpPost("{orderId}/prompt")]
+        public async Task<ActionResult<string>> GeneratePrompt(long orderId)
+        {
+            string prompt = await _createPrompt.Prompt(orderId);
+
+            return Ok(prompt);
         }
 
         // PUT api/<OrdersController>/5

@@ -42,7 +42,7 @@ namespace Repositories
 
         async public Task<MainCategory?> GetByIdMainCategoriesReposetoty(long id)
         {
-            return await _DBContext.MainCategories.FirstOrDefaultAsync(x => x.MainCategoryId == id);
+            return await _DBContext.MainCategories.AsNoTracking().FirstOrDefaultAsync(x => x.MainCategoryId == id);
         }
 
 

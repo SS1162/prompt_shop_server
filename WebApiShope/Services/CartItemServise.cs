@@ -113,7 +113,7 @@ namespace Services
             {
                 return Resulte<CartItemDTO?>.Failure("the product is valid alredy");
             }
-            await _cartsReposetory.ChangeProductToNotValidReposetory(cartItemId);
+            await _cartsReposetory.ChangeProductToValidReposetory(cartItemId);
             return Resulte<CartItemDTO>.Success(null);
         }
 

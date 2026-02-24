@@ -8,15 +8,18 @@ using System.Threading.Tasks;
 namespace DTO
 {
     public record UpdateBasicSiteDTO
-    (
+    {
         [Required]
-         long BasicSiteID ,
+        public long BasicSiteID { get; init; }
+
         [Required]
-         string SiteName ,
-         string UserDescreption ,
-         [Required]
-         long SiteTypeID ,
-         [Required]
-         long PlatformID 
-    );
+        public string SiteName { get; init; } = string.Empty;
+
+        public long? UserDescreption { get; init; }
+
+        public long? SiteTypeID { get; init; }
+
+        [Required]
+        public long PlatformID { get; init; }
+    }
 }

@@ -1,4 +1,4 @@
-using DTO;
+﻿using DTO;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 
@@ -11,17 +11,20 @@ namespace WebApiShope.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly IReviewsServise _reviewsServise;
-        public ReviewController() { }
+        public ReviewController(IReviewsServise reviewsServise) 
+        { 
+            this._reviewsServise = reviewsServise;
+        }
         // POST api/<OrdersController>/5/review   
         [HttpPost]
-        public async Task<ActionResult<ReviewDTO>> AddReviewAsync(long orderId, AddReviewDTO dto)
+        public async Task<ActionResult<ReviewDTO>> AddReviewAsync( [FromForm] AddReviewDTO dto)
         {
-            Resulte<ReviewDTO> respone = await _reviewsServise.AddReviewServise(orderId, dto);
+            Resulte<ReviewDTO> respone = await _reviewsServise.AddReviewServise(dto.OrderId, dto);
             if(!respone.IsSuccess)
             {
                 return BadRequest(respone.ErrorMessage);
             }
-            return CreatedAtAction(nameof(GetReviewByOrderId), new { id = orderId }, respone.Data);
+            return CreatedAtAction(nameof(GetReviewByOrderId), new { id = dto.OrderId }, respone.Data);
         }
 
         // GET api/<OrdersController>/5/review
@@ -50,7 +53,16 @@ namespace WebApiShope.Controllers
 
         }
 
-     
-       
+        // GET api/<ReviewController>/all
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetAllReviews(int limit, int currentPage)
+        {
+            Resulte<IEnumerable<ReviewDTO>> response = await _reviewsServise.GetAllReviewsServise(limit, currentPage);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+            return Ok(response.Data);
+        }
     }
 }

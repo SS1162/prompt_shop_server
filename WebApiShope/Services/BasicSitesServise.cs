@@ -42,27 +42,38 @@ namespace Services
             }
             BasicSite? checkIfBasicSiteInsist = await _basicSitesReposetory.GetByIDBasicSiteReposetory(id);
             Platform ? platformToCheckId = await _platformsReposetory.GetByIDPlatformsReposetory(basicSiteToUpdate.PlatformID);
-            SiteType? checkIfIsEmptySiteType = await _siteTypesRepository.GetSiteTypeByIdReposetory(basicSiteToUpdate.SiteTypeID);
+            if(basicSiteToUpdate.SiteTypeID!=null)
+            {
+            SiteType? checkIfIsEmptySiteType = await _siteTypesRepository.GetSiteTypeByIdReposetory((long)basicSiteToUpdate.SiteTypeID);
+                if (checkIfIsEmptySiteType == null)
+                {
+                    return Resulte<BasicSiteDTO?>.Failure("The Type syte ID isn't insist");
+                }
+                else if (basicSiteToUpdate.UserDescreption != null)
+                {
+                    return Resulte<BasicSiteDTO?>.Failure("The Type syte ID isn't empty so you shudn't include user descreption");
+                }
+             
+            }
+            else
+            {
+               if (basicSiteToUpdate.UserDescreption == null)
+                {
+                    return Resulte<BasicSiteDTO?>.Failure("The Type syte ID is empty so you must include user descreption");
+                }
+            }
+
             if (checkIfBasicSiteInsist == null)
             {
                 return Resulte<BasicSiteDTO?>.Failure("The Basic Site ID isn't insist");
             }
-            if (checkIfIsEmptySiteType == null)
-            {
-                return Resulte<BasicSiteDTO?>.Failure("The Type syte ID isn't insist");
-            }
+
             else if (platformToCheckId == null)
             {
                 return Resulte<BasicSiteDTO?>.Failure("The platforme ID isn't insist");
             }
-            else if (checkIfIsEmptySiteType.SiteTypeName != "Empty" && basicSiteToUpdate.UserDescreption != null)
-            {
-                return Resulte<BasicSiteDTO?>.Failure("The Type syte ID isn't empty so you shudn't include user descreption");
-            }
-            else if (checkIfIsEmptySiteType.SiteTypeName == "Empty" && basicSiteToUpdate.UserDescreption == null)
-            {
-                return Resulte<BasicSiteDTO?>.Failure("The Type syte ID is empty so you must include user descreption");
-            }
+           
+         
 
             BasicSite basicSiteToReposetory = _mapper.Map<BasicSite>(basicSiteToUpdate);
 
@@ -74,23 +85,31 @@ namespace Services
         async public Task<Resulte<BasicSiteDTO?>> AddBasicSiteServise(AddBasicSiteDTO BasicSiteToAdd)
         {
             Platform? platformToCheckId = await _platformsReposetory.GetByIDPlatformsReposetory(BasicSiteToAdd.PlatformID);
-            SiteType? checkIfIsEmptySiteType = await _siteTypesRepository.GetSiteTypeByIdReposetory(BasicSiteToAdd.SiteTypeID);
-            if (checkIfIsEmptySiteType == null)
+            if(BasicSiteToAdd.SiteTypeID!=null)
             {
-                return Resulte<BasicSiteDTO?>.Failure("The Type syte ID isn't insist");
+                SiteType? checkIfIsEmptySiteType = await _siteTypesRepository.GetSiteTypeByIdReposetory((long)BasicSiteToAdd.SiteTypeID);
+                if (checkIfIsEmptySiteType == null)
+                {
+                    return Resulte<BasicSiteDTO?>.Failure("The Type syte ID isn't insist");
+                }
+                else if (BasicSiteToAdd.UserDescreption != null)
+                {
+                    return Resulte<BasicSiteDTO?>.Failure("The Type syte ID isn't empty so you shudn't include user descreption");
+                }
             }
-            else if (checkIfIsEmptySiteType == null)
+            else
             {
-                return Resulte<BasicSiteDTO?>.Failure("The Type syte ID isn't insist");
+                if (BasicSiteToAdd.UserDescreption == null)
+                {
+                    return Resulte<BasicSiteDTO?>.Failure("The Type syte ID is empty so you must include user descreption");
+                }
             }
-            else if (checkIfIsEmptySiteType.SiteTypeName != "Empty" && BasicSiteToAdd.UserDescreption != null)
-            {
-                return Resulte<BasicSiteDTO?>.Failure("The Type syte ID isn't empty so you shudn't include user descreption");
-            }
-            else if (checkIfIsEmptySiteType.SiteTypeName == "Empty" && BasicSiteToAdd.UserDescreption == null)
-            {
-                return Resulte<BasicSiteDTO?>.Failure("The Type syte ID is empty so you must include user descreption");
-            }
+
+
+
+
+
+          
             BasicSite basicSiteToReposetory = _mapper.Map<BasicSite>(BasicSiteToAdd);
 
             BasicSite basicSiteFromReposetory = await _basicSitesReposetory.AddBasicSiteReposetory(basicSiteToReposetory);

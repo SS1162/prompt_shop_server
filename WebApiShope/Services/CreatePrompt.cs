@@ -2,9 +2,11 @@ using Entities;
 using Entities;
 using Google.GenAI;
 using Google.GenAI.Types;
+using Humanizer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualBasic;
+using Microsoft.Win32;
 using Repositories;
 using System;
 using System.CodeDom.Compiler;
@@ -36,7 +38,7 @@ namespace Services
             _basicSitesReposetory = basicSitesReposetory;
             _geminiPromptReposetory = geminiPromptsReposetory;
             _siteTypesRepository = siteTypesRepository;
-           // _platformsReposetory = platformsReposetory;
+           _platformsReposetory = platformsReposetory;
         }
         public async Task<string> Prompt(long orderId)
         {
@@ -102,7 +104,8 @@ namespace Services
 
             promptBuilder.Append("### 3. Platform Identity & Mandatory Data Mapping\n\n");
             promptBuilder.Append("For each platform, you are provided with a Functional Identity (a brief description for conceptual understanding only) and Initial Credentials. You MUST use the exact strings (Usernames/Passwords) provided in the list below for the database seeding:\n\n");
-           promptBuilder.Append(platform.PlatformsPrompt);
+            promptBuilder.Append("Simple User -Architecture: Basic Interface. Seeding: [Role: Simple_User | Access: Standard]. Rule: Every user who registers normally or logs in without explicit assignment to specialized roles(Admin, Secretary, Accountant, etc.) is automatically directed to this Simple User platform by default.");
+            promptBuilder.Append(platform.PlatformsPrompt);
             promptBuilder.Append("\n\n");
 
             promptBuilder.Append("### 4. Secure Handover Implementation\n\n");
@@ -136,7 +139,9 @@ namespace Services
                     {
                         promptBuilder.Append("- ");
                         promptBuilder.Append(ordersItem.Products.ProductPrompt);
-                        promptBuilder.Append("\n");
+                        promptBuilder.Append("\n for platforms:");
+                        promptBuilder.Append(ordersItem.BasicSitesPlatformsNavigation.PlatformName);
+
                     }
                     promptBuilder.Append("\n");
                 }

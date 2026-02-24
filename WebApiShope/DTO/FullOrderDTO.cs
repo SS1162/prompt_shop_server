@@ -8,20 +8,23 @@ using System.Threading.Tasks;
 namespace DTO
 {
     public record FullOrderDTO
-      (
-         [Required]
-         long OrderID, 
+    {
         [Required]
-         long UserID,
-         [Required]
-         float OrderSum,
+        public long OrderID { get; init; }
 
         [Required]
-         long BasicID,
-         [Required]
-         long StatusId,
+        public float OrderSum { get; init; }
 
         [Required]
-         List<AddToCartDTO> Products
-        );
+        public DateOnly OrderDate { get; init; }
+
+        [Required]
+        public string StatusName { get; init; } = string.Empty;
+
+        public string SiteName { get; init; } = string.Empty;
+
+        public int ProductCount { get; init; }
+
+        public long? ReviewId { get; init; }
+    }
 }

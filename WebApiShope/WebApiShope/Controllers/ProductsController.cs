@@ -1,4 +1,4 @@
-using DTO;
+﻿using DTO;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -71,6 +71,18 @@ namespace WebApiShope.Controllers
                 return BadRequest(reaspone.ErrorMessage);
             }
             return Ok();
+        }
+
+
+        [HttpGet("all")]
+        async public Task<ActionResult<IEnumerable<ProductDTO>>> GetAll()
+        {
+            IEnumerable<ProductDTO> response = await _productsServise.GetAllProductServise();
+            if(!response.Any())
+            {
+                return NoContent();
+            }
+            return Ok(response);
         }
     }
     

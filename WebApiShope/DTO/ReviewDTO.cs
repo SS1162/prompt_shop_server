@@ -7,14 +7,22 @@ using System.Threading.Tasks;
 
 namespace DTO
 {
-    public record ReviewDTO(
+    public class ReviewDTO
+    {
+        public ReviewDTO() { }
         [Required]
-        long ReviewId,
+        public long ReviewId { get; set; }
+
+        //[Required]
+        public long OrderId { get; set; }
+
         [Required]
-        long OrderId,
-        [Required]
-        int Score,
-        string Note,
-        string ReviewImageUrl
-    );
+        public int Stars { get; set; }
+
+        public string ReviewText { get; set; }
+
+        public string ReviewImg { get; set; }
+    }
+        
+   
 }

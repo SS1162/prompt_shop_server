@@ -1,4 +1,4 @@
-using DTO;
+﻿using DTO;
 using Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +16,13 @@ namespace WebApiShope.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _usersService;
-
-      
-
+        private readonly IConfiguration _configuration;
         private readonly ILogger<UsersController> _logger;
 
-        public UsersController(IUsersService usersService, ILogger<UsersController> logger)
+        public UsersController(IUsersService usersService, ILogger<UsersController> logger, IConfiguration configuration)
         {
             this._usersService = usersService;
-           
+            this._configuration = configuration;
             this._logger = logger;  
         }
 
@@ -104,6 +102,24 @@ namespace WebApiShope.Controllers
                 return BadRequest(reaspone.ErrorMessage);
             }
             return Ok();
+        }
+
+
+         [HttpGet("isAdmin/{id}")]
+        public async Task<ActionResult<UserDTO>> CheckIsAdmin( long id)
+        {
+          LoginUserDTO logInUser =new LoginUserDTO(_configuration["AdminName"], _configuration["AdminPassword"]);
+          UserDTO user = await _usersService.LoginUsersService(logInUser);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+            if(user.UserID != id)
+            {
+                return Ok(false);
+            }
+            else
+                return Ok(true);
         }
 
 

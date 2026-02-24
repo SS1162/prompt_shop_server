@@ -34,17 +34,17 @@ namespace Services
             Category? category = await _categoriesReposetory.GetByIDCategoriesReposetory(categoryId);
             if (category == null)
             {
-                Resulte<GeminiPrompt>.Failure("The product id is incorect");
+               return  Resulte<GeminiPromptDTO>.Failure("The product id is incorect");
             }
             Resulte<string> resulte = await _gemini.RunGeminiForUserProduct(userRequest, category.CategoryName);
             if(!resulte.IsSuccess)
             {
-                Resulte<GeminiPrompt>.Failure("Server error");
+              return   Resulte<GeminiPromptDTO>.Failure("Server error");
             }
 
             if(resulte.Data==null)
             {
-                Resulte<GeminiPrompt>.Failure("Server error");
+                return Resulte<GeminiPromptDTO>.Failure("Server error");
             }
             GeminiPrompt prompt = new GeminiPrompt();
             string jsonString = resulte.Data;
@@ -66,20 +66,20 @@ namespace Services
             Category? category = await _categoriesReposetory.GetByIDCategoriesReposetory(categoryId);
             if (category == null)
             {
-                Resulte<GeminiPrompt>.Failure("The product id is incorect");
+               return  Resulte<GeminiPromptDTO>.Failure("The product id is incorect");
             }
 
 
             MainCategory? mainCategory = await _mainCategoriesReposetory.GetByIdMainCategoriesReposetoty(category.MainCategoryId);
             if (mainCategory == null)
             {
-                Resulte<GeminiPrompt>.Failure("The main category id is incorect");
+               return  Resulte<GeminiPromptDTO>.Failure("The main category id is incorect");
             }
          
             Resulte<string> resulte = await _gemini.RunGeminiForFillCategory(userRequest, mainCategory.MainCategoryName);
             if (!resulte.IsSuccess)
             {
-                Resulte<GeminiPrompt>.Failure(resulte.ErrorMessage);
+                return Resulte<GeminiPromptDTO>.Failure(resulte.ErrorMessage);
             }
 
             if (resulte.Data == null)
@@ -105,12 +105,12 @@ namespace Services
             Resulte<string> resulte = await _gemini.RunGeminiForFillBasicSite(userRequest);
             if (!resulte.IsSuccess)
             {
-                Resulte<GeminiPrompt>.Failure(resulte.ErrorMessage);
+                return Resulte<GeminiPromptDTO>.Failure(resulte.ErrorMessage);
             }
 
             if (resulte.Data == null)
             {
-                Resulte<GeminiPrompt>.Failure("Server error");
+               return Resulte<GeminiPromptDTO>.Failure("Server error");
             }
             GeminiPrompt prompt = new GeminiPrompt();
             string jsonString =resulte.Data;
@@ -158,7 +158,7 @@ namespace Services
 
             if (checkIfThePromptExist == null)
             {
-                Resulte<GeminiPrompt>.Failure("The prompt id is incorect");
+               return  Resulte<GeminiPrompt>.Failure("The prompt id is incorect");
             }
 
         
@@ -167,7 +167,7 @@ namespace Services
            
             if (category == null)
             {
-                Resulte<GeminiPrompt>.Failure("The product id is incorect");
+                return Resulte<GeminiPrompt>.Failure("The product id is incorect");
             }
 
 

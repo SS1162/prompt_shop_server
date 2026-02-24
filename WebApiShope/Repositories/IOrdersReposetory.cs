@@ -11,5 +11,7 @@ namespace Repositories
         Task<OrdersItem> CheckIfHasPlatformByPlatformID(long platformID);
         Task<OrdersItem?> CheckIfHasProductByProductID(long ProductsId);
         Task<IEnumerable<OrdersItem>> BringsAllPromptsReposetory(long orderId);
+        Task<IEnumerable<Order>> getOrdersByUserId(long id);
+        Task<IEnumerable<Order>> GetAllOrders();
     }
 }

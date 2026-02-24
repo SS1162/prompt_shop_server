@@ -124,5 +124,15 @@ namespace Services
             await _productsReposetory.DeleteProductsReposetory(id);
             return Resulte<ProductDTO>.Success(null);
         }
+
+
+
+
+        async public Task<IEnumerable<ProductDTO>>GetAllProductServise()
+        {
+
+            return _mapper.Map<IEnumerable<ProductDTO>>(await _productsReposetory.GetProductsReposetory());
+
+        }
     }
 }

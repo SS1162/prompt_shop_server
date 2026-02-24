@@ -30,6 +30,8 @@ builder.Services.AddScoped<IGeminiServise, GeminiServise>();
 
 builder.Services.AddScoped<IGeminiSdkChatService, GeminiSdkChatService>();
 
+builder.Services.AddHttpClient<PayPalService>();
+
 builder.Services.AddScoped<IRatingsReposetory, RatingsReposetory>();
 
 builder.Services.AddScoped<IReviewsServise, ReviewsServise>();

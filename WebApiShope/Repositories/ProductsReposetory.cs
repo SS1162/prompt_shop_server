@@ -47,7 +47,7 @@ namespace Repositories
 
         async public Task<Product?>  HasProductsToCatrgoryReposetory(long categoryID)
         {
-            return await _DBContext.Products.FirstOrDefaultAsync(x => x.CategoryId == categoryID);
+            return await _DBContext.Products.AsNoTracking().FirstOrDefaultAsync(x => x.CategoryId == categoryID);
         }
 
         async public Task<Product> AddProductsReposetory(Product product)
@@ -65,9 +65,13 @@ namespace Repositories
 
         async public Task<Product?> GetByIDProductsReposetory(long id)
         {
-           return await _DBContext.Products.FirstOrDefaultAsync(x=>x.ProductsId == id);
+           return await _DBContext.Products.AsNoTracking().FirstOrDefaultAsync(x=>x.ProductsId == id);
         }
 
+        async public Task<IEnumerable<Product>> GetProductsReposetory()
+        {
+            return await _DBContext.Products.Include(p => p.Category).ToListAsync();
+        }
 
         async public Task DeleteProductsReposetory(long id)
         {

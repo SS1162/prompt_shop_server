@@ -10,5 +10,7 @@ namespace Repositories
         Task UpdateProductsReposetory(long id, Product product);
         Task<Product?> GetByIDProductsReposetory(long id);
         Task<Product?> HasProductsToCatrgoryReposetory(long categoryID);
+       
+        Task<IEnumerable<Product>> GetProductsReposetory();
     }
 }

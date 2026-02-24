@@ -9,7 +9,7 @@ namespace DTO
 {
     public record GeminiInput
     (
-         long categoryId, 
+         long? categoryId, 
          string userRequest
     );
 }

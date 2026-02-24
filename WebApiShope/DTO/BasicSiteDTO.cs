@@ -8,17 +8,15 @@ namespace DTO
 {
 
     public record BasicSiteDTO
-    (
-        long BasicSiteID ,
-        string SiteName ,
-        string UserDescreption ,
-        string PlatformName ,
-
-        string SiteTypeName ,
-
-        long PlatformID ,
-
-        long SiteTypeID ,
-         string SiteTypeDescreption 
-    );
+    {
+        public long BasicSiteID { get; init; }
+        public string SiteName { get; init; } = string.Empty;
+        public string? UserDescreption { get; init; }
+        public long? GeminiPromptId { get; init; }
+        public string PlatformName { get; init; } = string.Empty;
+        public string? SiteTypeName { get; init; }
+        public long PlatformID { get; init; }
+        public long? SiteTypeID { get; init; }
+        public string? SiteTypeDescreption { get; init; }
+    }
 }

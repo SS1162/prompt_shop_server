@@ -35,7 +35,7 @@ namespace WebApiShope.Controllers
 
     
         // POST api/<ProductsController>
-        [HttpPost]
+        [HttpPost("admin")]
         async public Task<ActionResult<ProductDTO>> AddProduct([FromBody] AddProductDTO product)
         {
 
@@ -49,7 +49,7 @@ namespace WebApiShope.Controllers
         }
 
         // PUT api/<ProductsController>/5
-        [HttpPut("{id}")]
+        [HttpPut("admin/{id}")]
         async public Task<ActionResult> UpdateProduct(long id, [FromBody] UpdateProductDTO productToUpdate )
         {
             Resulte<ProductDTO> reaspone = await _productsServise.UpdateProductServise(id, productToUpdate);
@@ -61,7 +61,7 @@ namespace WebApiShope.Controllers
         }
 
         // DELETE api/<ProductsController>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("admin/{id}")]
         async public Task<ActionResult> DeleteProduct(long id)
         {
 
@@ -74,7 +74,7 @@ namespace WebApiShope.Controllers
         }
 
 
-        [HttpGet("all")]
+        [HttpGet("admin")]
         async public Task<ActionResult<IEnumerable<ProductDTO>>> GetAll()
         {
             IEnumerable<ProductDTO> response = await _productsServise.GetAllProductServise();

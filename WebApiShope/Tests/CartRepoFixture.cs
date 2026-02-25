@@ -35,7 +35,7 @@ namespace Tests
                 CartId = 1,
                 UserId = 101,
                 ProductsId = 50,
-                UserDescription = "Standard shipping",
+                //UserDescription = "Standard shipping",
                 Valid = 1
             },
             new CartItem
@@ -43,7 +43,7 @@ namespace Tests
                 CartId = 2,
                 UserId = 102,
                 ProductsId = 51,
-                UserDescription = "Gift package",
+                //UserDescription = "Gift package",
                 Valid = 1
             }
         };

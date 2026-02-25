@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,20 +8,23 @@ using System.Threading.Tasks;
 namespace DTO
 {
     public record FullOrderDTO
-      (
-         [Required]
-         int OrderID, 
+    {
         [Required]
-         int UserID,
-         [Required]
-         float OrderSum,
+        public long OrderID { get; init; }
 
         [Required]
-         int BasicID,
-         [Required]
-         int Status,
+        public float OrderSum { get; init; }
 
         [Required]
-         List<AddToCartDTO> Products
-        );
+        public DateOnly OrderDate { get; init; }
+
+        [Required]
+        public string StatusName { get; init; } = string.Empty;
+
+        public string SiteName { get; init; } = string.Empty;
+
+        public int ProductCount { get; init; }
+
+        public long? ReviewId { get; init; }
+    }
 }

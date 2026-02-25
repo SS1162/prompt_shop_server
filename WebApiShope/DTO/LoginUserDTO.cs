@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 
 namespace Entities
 {
-   
+
     public record LoginUserDTO
     (
 
         [EmailAddress]
         [Required]
-         string UserName ,
+         string UserName,
         [Required]
-         string UserPassward 
+         string UserPassward
 
     );
+  
 }

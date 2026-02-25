@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Repositories;
 using DTO;
 using AutoMapper;
@@ -6,16 +6,16 @@ namespace Services
 {
     public class UsersService : IUsersService
     {//get by id
-        private IUsersReposetory _usersReposetory;
-        private IMapper _mapper;
-        private IPasswordsService _passwordsService;
+        private readonly IUsersReposetory _usersReposetory;
+        private readonly IMapper _mapper;
+        private readonly IPasswordsService _passwordsService;
         public UsersService(IUsersReposetory repositoriesUsers, IMapper mapper, IPasswordsService passwordsService)
         {
             this._usersReposetory = repositoriesUsers;
             this._mapper = mapper;
             this._passwordsService = passwordsService;
         }
-        public async Task<UserDTO> GetByIDUsersService(int id)
+        public async Task<UserDTO> GetByIDUsersService(long id)
         {
 
             User? user = await _usersReposetory.GetByIDUsersRepositories(id);
@@ -68,30 +68,56 @@ namespace Services
             return userToConroller;
         }
 
-        async public Task<Resulte<UserDTO>> UpdateUsersService(int id, UpdateUserDTO userToUpdate)
+        async public Task<Resulte<UserDTO>> UpdateUsersService(long id, UpdateUserDTO userToUpdate)
         {
+          
 
 
-            PasswordDTO passwordForCheckStrength = new PasswordDTO();
-            passwordForCheckStrength.UserPassward = userToUpdate.Password;
-            if (_passwordsService.CheckPasswordStrength(passwordForCheckStrength).Data < 2)
-            {
-                Resulte<UserDTO>.Failure("The password is not strong enough");
-            }
             if (id != userToUpdate.UserId)
-                Resulte<UserDTO>.Failure("The id'es are diffrent");
-
+                return Resulte<UserDTO>.Failure("The id'es are diffrent");
+            User? checkIfUserExist = await _usersReposetory.GetByIDUsersRepositories(id);
+            if(checkIfUserExist==null)
+            {
+                return Resulte<UserDTO>.Failure("The user ide's is incorect");
+            }
+            if (userToUpdate.Password != null)
+            {
+                PasswordDTO passwordForCheckStrength = new PasswordDTO();
+                passwordForCheckStrength.UserPassward = userToUpdate.Password;
+                if (passwordForCheckStrength.UserPassward != null && _passwordsService.CheckPasswordStrength(passwordForCheckStrength).Data < 2)
+                {
+                    return Resulte<UserDTO>.Failure("The password is not strong enough");
+                }
+            }
+            else
+            {
+            userToUpdate = new UpdateUserDTO(userToUpdate.UserId, checkIfUserExist.Password, userToUpdate.UserName,
+            userToUpdate.FirstName,userToUpdate.LastName,userToUpdate.Phone,userToUpdate.BasicID);     
+            }
             User userToRposetory = _mapper.Map<User>(userToUpdate);
+            if(userToUpdate.Password==null)
+            {
+                userToRposetory.Password = checkIfUserExist.Password;
+            }
             User? checkUserValidtion = await _usersReposetory.GetByIDUsersRepositories(id);
             if (checkUserValidtion == null)
-                Resulte<UserDTO>.Failure("The user id dont exist");
+                return Resulte<UserDTO>.Failure("The user id dont exist");
 
             if (checkUserValidtion.UserName != userToRposetory.UserName)
-                Resulte<UserDTO>.Failure("The user name make diifrent");
+                return Resulte<UserDTO>.Failure("The user name make diifrent");
 
             await _usersReposetory.UpdateUsersRepositories(id, userToRposetory);
             return Resulte<UserDTO>.Success(null);
 
+        }
+
+
+        public async Task<UserDTO> SignInWithGoogleServise(RegisterUserDTO registerUser)
+        {
+            User userToReposetory = _mapper.Map<User>(registerUser);
+            userToReposetory.UserName = userToReposetory.UserName.ToLower();
+            User userForReturn = await _usersReposetory.SignInWithGoogleRepositories(userToReposetory);
+            return _mapper.Map<UserDTO>(userForReturn);
         }
 
     }

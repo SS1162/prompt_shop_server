@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -114,7 +114,7 @@ namespace Tests
             public async Task CheckIfHasPlatformByPlatformID_Existing_ReturnsItem()
             {
                 // Arrange - מניחים שב-Seed הזמנה 1 מכילה פלטפורמה 1
-                int platformId = 1;
+                long platformId = 1;
 
                 // Act
                 var result = await _repository.CheckIfHasPlatformByPlatformID(platformId);
@@ -139,7 +139,7 @@ namespace Tests
             {
                 // Arrange
                 // ב-Fixture הגדרנו שב-Seed יש OrdersItem עם ProductsId = 1
-                int existingProductId = 1;
+                long existingProductId = 1;
 
                 // Act
                 var result = await _repository.CheckIfHasProductByProductID(existingProductId);
@@ -156,7 +156,7 @@ namespace Tests
             {
                 // Arrange
                 // מזהה מוצר שלא קיים ב-Seed של ה-OrdersItems
-                int nonExistingProductId = 999;
+                long nonExistingProductId = 999;
 
                 // Act
                 var result = await _repository.CheckIfHasProductByProductID(nonExistingProductId);
@@ -171,7 +171,7 @@ namespace Tests
             {
                 // Arrange
                 // מזהה פלטפורמה שלא מופיע באף OrdersItem ב-Seed שלנו
-                int nonExistingPlatformId = 555;
+                long nonExistingPlatformId = 555;
 
                 // Act
                 var result = await _repository.CheckIfHasPlatformByPlatformID(nonExistingPlatformId);

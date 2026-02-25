@@ -1,22 +1,22 @@
-﻿using DTO;
+using DTO;
 
 namespace Services
 {
     public interface ICartItemServise
     {
-        Task<Resulte<CartItemDTO?>> ChangeProductToNotValidCartServise(int cartItemId);
-        Task<Resulte<CartItemDTO?>> ChangeProductToValidCartServise(int cartItemId);
+        Task<Resulte<CartItemDTO?>> ChangeProductToNotValidCartServise(long cartItemId);
+        Task<Resulte<CartItemDTO?>> ChangeProductToValidCartServise(long cartItemId);
       
 
 
 
-        Task<Resulte<CartItemDTO?>> DeleteUserCartServise(int cartItemId);
+        Task<Resulte<CartItemDTO?>> DeleteUserCartServise(long cartItemId);
 
 
         Task<Resulte<CartItemDTO>> CreateUserCartServise(AddToCartDTO dto);
-        Task<CartItemDTO?> GetByIdServise(int id);
+        Task<CartItemDTO?> GetByIdServise(long id);
 
 
-        Task<Resulte<IEnumerable<CartItemDTO>>> GetUserCartServise(int userId);
+        Task<Resulte<IEnumerable<CartItemDTO>>> GetUserCartServise(long userId);
     }
 }

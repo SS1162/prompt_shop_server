@@ -13,7 +13,7 @@ public partial class BasicSite
 
     public long? SiteTypeId { get; set; }
 
-    public string UserDescreption { get; set; }
+    public long? UserDescription { get; set; }
 
     public long BasicSitesPlatforms { get; set; }
 
@@ -22,6 +22,8 @@ public partial class BasicSite
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual SiteType SiteType { get; set; }
+
+    public virtual GeminiPrompt UserDescriptionNavigation { get; set; }
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

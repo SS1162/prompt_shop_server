@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +10,8 @@ namespace Repositories
     public class OrdersReposetory : IOrdersReposetory
     {
 
-        MyShop330683525Context _DBcontext;
-        ICartsReposetory _cartsReposetory;
+        private readonly MyShop330683525Context _DBcontext;
+        private readonly ICartsReposetory _cartsReposetory;
 
         public OrdersReposetory(MyShop330683525Context _DBcontext, ICartsReposetory cartsReposetory)
         {
@@ -25,20 +25,47 @@ namespace Repositories
        
         }
 
-        public async Task<Order?> GetOrderByIdReposetory(int id)
+
+
+        public async Task<IEnumerable<Order>> GetAllOrders()
         {
-            return await _DBcontext.Orders.FirstOrDefaultAsync(order => order.OrderId == id);
+            return await _DBcontext.Orders
+                .Include(o => o.Basic)
+                .Include(o => o.Status)
+                .Include(o => o.Review)
+                .Include(o => o.OrdersItems)
+                .ToListAsync();
+        }
+
+
+        public async Task<IEnumerable<Order>> getOrdersByUserId(long id)
+        {
+            return await _DBcontext.Orders.Where(x=>x.UserId==id).Include(x=>x.Review).Include(x=>x.Basic).Include(x=>x.Basic.SiteType).Include(x=>x.OrdersItems).ThenInclude(oi => oi.Products).Include(x => x.Status).ToListAsync();
+        }
+
+        public async Task<Order?> GetOrderByIdReposetory(long id)
+        {
+            return await _DBcontext.Orders
+                .AsNoTracking()
+                .Include(o => o.Basic)
+                .Include(o => o.Basic.SiteType)
+                .Include(o => o.OrdersItems)
+                    .ThenInclude(oi => oi.Products)
+                .Include(o => o.Status)
+                .Include(o => o.Review)
+                
+                .FirstOrDefaultAsync(order => order.OrderId == id);
         }
 
         public async Task<Order> AddOrderReposetory(Order order)
         {
             await _DBcontext.Orders.AddAsync(order);
             await _DBcontext.SaveChangesAsync();
-            await _cartsReposetory.DeleteUserCartReposetory(Convert.ToInt32(order.UserId));
+            await _cartsReposetory.DeleteUserCartReposetory(order.UserId);
             return order;
         }
 
-        public async Task UpdateStatusReposetory(int id ,Order order)
+        public async Task UpdateStatusReposetory(long id ,Order order)
         {
             _DBcontext.Orders.Update(order);
             await _DBcontext.SaveChangesAsync();
@@ -46,24 +73,63 @@ namespace Repositories
 
 
 
-        public async Task<IEnumerable<OrdersItem>> GetOrderItemsReposetory(int orderId)
+        public async Task<IEnumerable<OrdersItem>> GetOrderItemsReposetory(long orderId)
         {
             return await _DBcontext.OrdersItems
                 .Where(oi => oi.OrderId == orderId)
                 .ToListAsync();
         }
 
-        public async Task<OrdersItem?> CheckIfHasPlatformByPlatformID(int platformID)
+        public async Task<OrdersItem?> CheckIfHasPlatformByPlatformID(long platformID)
         {
-            return await _DBcontext.OrdersItems.FirstOrDefaultAsync(x => x.BasicSitesPlatforms == platformID);
+            return await _DBcontext.OrdersItems.AsNoTracking().FirstOrDefaultAsync(x => x.BasicSitesPlatforms == platformID);
         }
 
-        public async Task<OrdersItem?> CheckIfHasProductByProductID(int ProductsId)
+        public async Task<OrdersItem?> CheckIfHasProductByProductID(long productsId)
         {
-            return await _DBcontext.OrdersItems.FirstOrDefaultAsync(x => x.ProductsId == ProductsId);
+            return await _DBcontext.OrdersItems.AsNoTracking().FirstOrDefaultAsync(x => x.ProductsId == productsId);
         }
 
-
+        public async Task<IEnumerable<OrdersItem>> BringsAllPromptsReposetory(long orderId)
+        {
+            return await _DBcontext.OrdersItems
+                .Where(x => x.OrderId == orderId)
+                .Include(oi => oi.BasicSitesPlatformsNavigation)
+                .Include(oi => oi.Products)
+                    .ThenInclude(p => p.Category)
+                        .ThenInclude(c => c.MainCategory)
+                .Select(oi => new OrdersItem
+                {
+                    OrderItemId = oi.OrderItemId,
+                    ProductsId = oi.ProductsId,
+                    OrderId = oi.OrderId,
+                    UserDescription = oi.UserDescription,
+                    BasicSitesPlatforms = oi.BasicSitesPlatforms,
+                    BasicSitesPlatformsNavigation = new Platform
+                    {
+                        PlatformId = oi.BasicSitesPlatformsNavigation.PlatformId,
+                        PlatformName = oi.BasicSitesPlatformsNavigation.PlatformName
+                    },
+                    Products = new Product
+                    {
+                        ProductsId = oi.Products.ProductsId,
+                        ProductPrompt = oi.Products.ProductPrompt,
+                        Category = new Category
+                        {
+                            CategoryId = oi.Products.Category.CategoryId,
+                            CategoryPrompt = oi.Products.Category.CategoryPrompt,
+                            MainCategory = new MainCategory
+                            {
+                                MainCategoryId = oi.Products.Category.MainCategory.MainCategoryId,
+                                MainCategoryPrompt = oi.Products.Category.MainCategory.MainCategoryPrompt
+                            }
+                        }
+                    }
+                })
+                    .OrderBy(x => x.Products.Category.MainCategory.MainCategoryId)
+                .ThenBy(x => x.Products.Category.CategoryId)
+          .ToListAsync();
+        }
     }
 
 }

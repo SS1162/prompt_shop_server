@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,27 +10,28 @@ namespace Repositories
 {
     public class BasicSitesReposetory : IBasicSitesReposetory
     {
-        MyShop330683525Context _DBContext;
+        private readonly MyShop330683525Context _DBContext;
         public BasicSitesReposetory(MyShop330683525Context DBContext)
         {
             this._DBContext = DBContext;
         }
-        async public Task<BasicSite?> GetByIDBasicSiteReposetory(int id)
+        async public Task<BasicSite?> GetByIDBasicSiteReposetory(long id)
         {
-            return await _DBContext.BasicSites.Include(x => x.BasicSitesPlatforms)
+            return await _DBContext.BasicSites.AsNoTracking().Include(x => x.BasicSitesPlatformsNavigation)
                 .Include(x => x.SiteType)
+                .Include(x => x.UserDescriptionNavigation)
                 .FirstOrDefaultAsync(x => x.BasicSiteId == id);
 
         }
 
-        async public Task<BasicSite?> CheckIfHasPlatformByPlatformID(int id)
+        async public Task<BasicSite?> CheckIfHasPlatformByPlatformID(long id)
         {
-            return await _DBContext.BasicSites.FirstOrDefaultAsync(x => x.BasicSitesPlatforms == id);
+            return await _DBContext.BasicSites.AsNoTracking().FirstOrDefaultAsync(x => x.BasicSitesPlatforms == id);
           
 
         }
 
-        async public Task UpdateBasicSiteReposetory(int id, BasicSite basicSiteToUpdate)
+        async public Task UpdateBasicSiteReposetory(long id, BasicSite basicSiteToUpdate)
         {
             _DBContext.BasicSites.Update(basicSiteToUpdate);
             await _DBContext.SaveChangesAsync();

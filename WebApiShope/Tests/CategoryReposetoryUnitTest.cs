@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace Tests
         public async Task GetCategories_HappyPath_ReturnsFilteredItems()
         {
             // Arrange
-            int mainCategoryId = 1;
+            long mainCategoryId = 1;
             int pageNumber = 1;
             int pageSize = 10;
             string search = "מחשבים";
@@ -45,7 +45,7 @@ namespace Tests
         public async Task GetCategories_WhenSearchIsNull_ReturnsAllInMainCategory()
         {
             // Arrange
-            int mainCategoryId = 1;
+            long mainCategoryId = 1;
             int pageNumber = 1;
             int pageSize = 10;
             string? search = null; // בדיקת המקרה שבו אין חיפוש
@@ -62,7 +62,7 @@ namespace Tests
         public async Task GetCategories_WhenPageSizeIsSmall_AppliesPaging()
         {
             // Arrange
-            int mainCategoryId = 1;
+            long mainCategoryId = 1;
             int pageNumber = 2; // דף שני
             int pageSize = 1;   // איבר אחד בדף
             string? search = null;
@@ -81,7 +81,7 @@ namespace Tests
         public async Task GetByID_HappyPath_ReturnsCorrectCategory()
         {
             // Arrange
-            int existingId = 1;
+            long existingId = 1;
 
             // Act
             var result = await _repository.GetByIDCategoriesReposetory(existingId);
@@ -96,7 +96,7 @@ namespace Tests
         public async Task GetByID_WhenIdDoesNotExist_ReturnsNull()
         {
             // Arrange
-            int nonExistingId = 999;
+            long nonExistingId = 999;
 
             // Act
             var result = await _repository.GetByIDCategoriesReposetory(nonExistingId);
@@ -109,7 +109,7 @@ namespace Tests
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
-        public async Task GetByID_InvalidId_ReturnsNull(int invalidId)
+        public async Task GetByID_InvalidId_ReturnsNull(long invalidId)
         {
             // Arrange & Act
             var result = await _repository.GetByIDCategoriesReposetory(invalidId);
@@ -188,7 +188,7 @@ namespace Tests
         public async Task DeleteCategory_HappyPath_CallsRemoveAndSave()
         {
             // Arrange
-            int categoryIdToDelete = 1;
+            long categoryIdToDelete = 1;
 
             // Act
             await _repository.DeleteIDCategoriesReposetory(categoryIdToDelete);

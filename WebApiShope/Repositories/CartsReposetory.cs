@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +12,7 @@ namespace Repositories
     public class CartsReposetory : ICartsReposetory
     {
 
-        MyShop330683525Context _DBcontext;
+        private readonly MyShop330683525Context _DBcontext;
 
 
       
@@ -21,17 +21,19 @@ namespace Repositories
             this._DBcontext = _DBcontext;
         }
 
-        public async Task<CartItem?> GetByIdReposetory(int id)
+        public async Task<CartItem?> GetByIdReposetory(long id)
         {
-            return await _DBcontext.CartItems.FirstOrDefaultAsync(c => c.CartId == id);
+            return await _DBcontext.CartItems.AsNoTracking().FirstOrDefaultAsync(c => c.CartId == id);
         }
-        public async Task<IEnumerable<CartItem>> GetByIDUserCartItemsReposetory(int Id)
+        public async Task<IEnumerable<CartItem>> GetByIDUserCartItemsReposetory(long Id)
         {
             return await _DBcontext.CartItems
                 .Where(ci => ci.UserId == Id)
+                .Include(x => x.BasicSitesPlatformsNavigation)
+                .Include(x => x.Products)
+                    .ThenInclude(p => p.Category)
                 .ToListAsync();
         }
-
         public async Task<CartItem> CreateUserCartReposetory(CartItem cartItem)
         {
             await _DBcontext.CartItems.AddAsync(cartItem);
@@ -41,7 +43,7 @@ namespace Repositories
 
         
 
-        public async Task ChangeProductToValidReposetory(int Id)
+        public async Task ChangeProductToValidReposetory(long Id)
         {
             CartItem cartItem = await _DBcontext.CartItems.FirstOrDefaultAsync(x=>x.CartId==Id);
             cartItem.Valid = 1;
@@ -51,19 +53,19 @@ namespace Repositories
         }
 
 
-        public async Task<CartItem?> CheckIfHasPlatformByPlatformID(int Id)
+        public async Task<CartItem?> CheckIfHasPlatformByPlatformID(long Id)
         {
-           return await _DBcontext.CartItems.FirstOrDefaultAsync(x=>x.BasicSitesPlatforms==Id);
+           return await _DBcontext.CartItems.AsNoTracking().FirstOrDefaultAsync(x=>x.BasicSitesPlatforms==Id);
 
         }
 
 
-        public async Task<CartItem?> CheckIfHasProductByProductID(int Id)
+        public async Task<CartItem?> CheckIfHasProductByProductID(long Id)
         {
-            return await _DBcontext.CartItems.FirstOrDefaultAsync(x => x.ProductsId == Id);
+            return await _DBcontext.CartItems.AsNoTracking().FirstOrDefaultAsync(x => x.ProductsId == Id);
 
         }
-        public async Task ChangeProductToNotValidReposetory(int Id)
+        public async Task ChangeProductToNotValidReposetory(long Id)
         {
             CartItem cartItem = await _DBcontext.CartItems.FirstOrDefaultAsync(x => x.CartId == Id);
             cartItem.Valid = 0;
@@ -73,21 +75,25 @@ namespace Repositories
         }
 
         //       מוחקת סל ומוסיפה הזמנות
-        public async Task DeleteUserCartReposetory(int userID)
+        public async Task DeleteUserCartReposetory(long userID)
         {
             List<CartItem> itemList = await _DBcontext.CartItems.Where(x => x.UserId == userID).ToListAsync();
             for (int i = 0; i < itemList.Count(); i++)
             {
-                _DBcontext.CartItems.Remove(itemList[i]);
+                if(itemList[i].Valid==1)
+                {
+                   _DBcontext.CartItems.Remove(itemList[i]);
+                }
+        
             }
             await _DBcontext.SaveChangesAsync();
         }
 
-        public async Task<CartItem?> GetByUserAndProductIdReposetory(int userId, int productId)
+        public async Task<CartItem?> GetByUserAndProductIdReposetory(long userId, long productId)
         {
-            return await _DBcontext.CartItems.FirstOrDefaultAsync(c => c.UserId == userId && c.ProductsId == productId);
+            return await _DBcontext.CartItems.AsNoTracking().FirstOrDefaultAsync(c => c.UserId == userId && c.ProductsId == productId);
         }
-        public async Task DeleteUserCartItemReposetory(int Id)
+        public async Task DeleteUserCartItemReposetory(long Id)
         {
             var cartItemsObjectToDelete = await _DBcontext.CartItems.FirstOrDefaultAsync(x => x.CartId == Id);
             _DBcontext.CartItems.Remove(cartItemsObjectToDelete);

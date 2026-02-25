@@ -1,4 +1,4 @@
-﻿using DTO;
+using DTO;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using System.Reflection.Metadata.Ecma335;
@@ -10,7 +10,7 @@ namespace WebApiShope.Controllers
     [ApiController]
     public class MainCategoriesController : ControllerBase
     {
-        IMainCategoriesServise _mainCategoriesServise;
+        private readonly IMainCategoriesServise _mainCategoriesServise;
         public MainCategoriesController(IMainCategoriesServise mainCategoriesServise)
         {
             this._mainCategoriesServise = mainCategoriesServise;
@@ -30,7 +30,7 @@ namespace WebApiShope.Controllers
 
 
         // POST api/<MainCategoriesController>
-        [HttpPost]
+        [HttpPost("admin")]
         async public Task<ActionResult<MainCategoriesDTO>> AddMainCategory([FromBody] ManegerMainCategoryDTO manegerMainCategory)
         {
             MainCategoriesDTO mainCategoryConstructedObject = await _mainCategoriesServise.AddMainCategoriesServises(manegerMainCategory);
@@ -38,8 +38,8 @@ namespace WebApiShope.Controllers
         }
 
         // PUT api/<MainCategoriesController>/5
-        [HttpPut("{id}")]
-        async public Task<ActionResult> UpdateMainCategory(int id, [FromBody] MainCategoriesDTO mainCategory)
+        [HttpPut("admin/{id}")]
+        async public Task<ActionResult> UpdateMainCategory(long id, [FromBody] MainCategoriesDTO mainCategory)
         {
             Resulte<MainCategoriesDTO> respone= await _mainCategoriesServise.UpdateMainCategoriesServises(id, mainCategory);
             if(!respone.IsSuccess)
@@ -50,8 +50,8 @@ namespace WebApiShope.Controllers
         }
 
         // DELETE api/<MainCategoriesController>/5
-        [HttpDelete("{id}")]
-        async public Task<ActionResult> Delete(int id)
+        [HttpDelete("admin/{id}")]
+        async public Task<ActionResult> Delete(long id)
         {
             Resulte<MainCategoriesDTO> respone = await _mainCategoriesServise.DeleteMainCategoriesServises(id);
             if (!respone.IsSuccess)

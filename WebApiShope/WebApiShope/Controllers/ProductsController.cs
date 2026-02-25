@@ -11,7 +11,7 @@ namespace WebApiShope.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        IProductsServise _productsServise;
+        private readonly IProductsServise _productsServise;
 
         public ProductsController(IProductsServise productsServise)
         {
@@ -19,7 +19,7 @@ namespace WebApiShope.Controllers
         }
         // GET: api/<ProductsController>
         [HttpGet]
-        async public Task<ActionResult<Resulte<ResponePage<ProductDTO>>>> Get(int categoryID, int numOfPages, int PageSize, string? search, int? minPrice, int? MaxPrice, bool? orderByPrice, bool? desc)
+        async public Task<ActionResult<Resulte<ResponePage<ProductDTO>>>> Get(long categoryID, int numOfPages, int PageSize, string? search, int? minPrice, int? MaxPrice, bool? orderByPrice, bool? desc)
         {
             Resulte<ResponePage<ProductDTO>> respone = await _productsServise.GetProductsServise( categoryID,  numOfPages,  PageSize,  search,  minPrice,   MaxPrice,  orderByPrice,   desc);
            if(!respone.IsSuccess)
@@ -35,7 +35,7 @@ namespace WebApiShope.Controllers
 
     
         // POST api/<ProductsController>
-        [HttpPost]
+        [HttpPost("admin")]
         async public Task<ActionResult<ProductDTO>> AddProduct([FromBody] AddProductDTO product)
         {
 
@@ -49,8 +49,8 @@ namespace WebApiShope.Controllers
         }
 
         // PUT api/<ProductsController>/5
-        [HttpPut("{id}")]
-        async public Task<ActionResult> UpdateProduct(int id, [FromBody] UpdateProductDTO productToUpdate )
+        [HttpPut("admin/{id}")]
+        async public Task<ActionResult> UpdateProduct(long id, [FromBody] UpdateProductDTO productToUpdate )
         {
             Resulte<ProductDTO> reaspone = await _productsServise.UpdateProductServise(id, productToUpdate);
             if (!reaspone.IsSuccess)
@@ -61,8 +61,8 @@ namespace WebApiShope.Controllers
         }
 
         // DELETE api/<ProductsController>/5
-        [HttpDelete("{id}")]
-        async public Task<ActionResult> DeleteProduct(int id)
+        [HttpDelete("admin/{id}")]
+        async public Task<ActionResult> DeleteProduct(long id)
         {
 
             Resulte<ProductDTO> reaspone = await _productsServise.DeleteIDProductServise(id);
@@ -71,6 +71,18 @@ namespace WebApiShope.Controllers
                 return BadRequest(reaspone.ErrorMessage);
             }
             return Ok();
+        }
+
+
+        [HttpGet("admin")]
+        async public Task<ActionResult<IEnumerable<ProductDTO>>> GetAll()
+        {
+            IEnumerable<ProductDTO> response = await _productsServise.GetAllProductServise();
+            if(!response.Any())
+            {
+                return NoContent();
+            }
+            return Ok(response);
         }
     }
     

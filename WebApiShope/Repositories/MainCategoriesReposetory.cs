@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ namespace Repositories
 {
     public class MainCategoriesReposetory : IMainCategoriesReposetory
     {
-        MyShop330683525Context _DBContext;
+        private readonly MyShop330683525Context _DBContext;
         public MainCategoriesReposetory(MyShop330683525Context _DBContext)
         {
             this._DBContext = _DBContext;
@@ -31,7 +31,7 @@ namespace Repositories
 
 
 
-        async public Task UpdateMainCategoriesReposetoty(int id, MainCategory mainCategoryToUpdate)
+        async public Task UpdateMainCategoriesReposetoty(long id, MainCategory mainCategoryToUpdate)
         {
 
             _DBContext.MainCategories.Update(mainCategoryToUpdate);
@@ -40,15 +40,15 @@ namespace Repositories
         }
 
 
-        async public Task<MainCategory?> GetByIdMainCategoriesReposetoty(int id)
+        async public Task<MainCategory?> GetByIdMainCategoriesReposetoty(long id)
         {
-            return await _DBContext.MainCategories.FirstOrDefaultAsync(x => x.MainCategoryId == id);
+            return await _DBContext.MainCategories.AsNoTracking().FirstOrDefaultAsync(x => x.MainCategoryId == id);
         }
 
 
 
         //עדיין אין בדיקות
-        async public Task DeleteMainCategoriesReposetoty(int id)
+        async public Task DeleteMainCategoriesReposetoty(long id)
         {
             MainCategory mainCategory = await _DBContext.MainCategories.FirstOrDefaultAsync(x=>x.MainCategoryId==id);
             _DBContext.Remove(mainCategory);

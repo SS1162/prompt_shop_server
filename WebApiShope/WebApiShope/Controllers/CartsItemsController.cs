@@ -1,4 +1,4 @@
-﻿using DTO;
+using DTO;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -11,7 +11,7 @@ namespace WebApiShope.Controllers
     public class CartsItemsController : ControllerBase
     {
 
-        ICartItemServise _cartItemServise;
+        private readonly ICartItemServise _cartItemServise;
 
         public CartsItemsController(ICartItemServise cartItemServise)
         {
@@ -24,16 +24,16 @@ namespace WebApiShope.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CartItemDTO>>> GetUserCart([FromQuery] int userId)
+        public async Task<ActionResult<IEnumerable<CartItemDTO>>> GetUserCart([FromQuery] long userId)
         {
             Resulte<IEnumerable<CartItemDTO>> cartItems = await _cartItemServise.GetUserCartServise(userId);
             if (!cartItems.IsSuccess)
             {
                 return BadRequest(cartItems.ErrorMessage);
             }
-            if (cartItems.Data==null)
+            if (!cartItems.Data.Any())
             {
-                return NotFound();
+                return NoContent();
             }
             return Ok(cartItems.Data);
         }
@@ -42,7 +42,7 @@ namespace WebApiShope.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CartItemDTO>> GetById(int id)
+        public async Task<ActionResult<CartItemDTO>> GetById(long id)
         {
             CartItemDTO? cartItem = await _cartItemServise.GetByIdServise(id);
             if (cartItem == null)
@@ -69,7 +69,7 @@ namespace WebApiShope.Controllers
         
         // DELETE api/<CartsItemsController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserCart(int id)
+        public async Task<IActionResult> DeleteUserCart(long id)
         {
              Resulte<CartItemDTO?> resulte = await _cartItemServise.DeleteUserCartServise(id);
             if (!resulte.IsSuccess)
@@ -82,7 +82,7 @@ namespace WebApiShope.Controllers
 
         [HttpPut("changeToValid/{id}")]
 
-        public async Task<IActionResult> ChangeProductToValid(int id)
+        public async Task<IActionResult> ChangeProductToValid(long id)
         {
             Resulte<CartItemDTO?> resulte = await _cartItemServise.ChangeProductToValidCartServise(id);
             if (!resulte.IsSuccess)
@@ -95,7 +95,7 @@ namespace WebApiShope.Controllers
 
         [HttpPut("changeToNotValid/{id}")]
 
-        public async Task<IActionResult> ChangeProductToNotValid(int id)
+        public async Task<IActionResult> ChangeProductToNotValid(long id)
         {
             Resulte<CartItemDTO?> resulte = await _cartItemServise.ChangeProductToNotValidCartServise(id);
             if (!resulte.IsSuccess)

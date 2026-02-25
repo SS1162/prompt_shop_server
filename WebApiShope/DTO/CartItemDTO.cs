@@ -8,24 +8,30 @@ using System.Threading.Tasks;
 namespace DTO
 {
     public record CartItemDTO
-    (
-         int CartID ,
+    {
+        public long CartID { get; init; }
 
-         string ProductsName ,
+        public string ProductsName { get; init; } = string.Empty;
 
-         float Price, 
+        public float Price { get; init; }
 
-         string CategoryName ,
+        public string CategoryName { get; init; } = string.Empty;
 
-         string ImgUrl ,
+        public string ImgUrl { get; init; } = string.Empty;
 
-         string CategoryDescreption ,
+        public string CategoryDescreption { get; init; } = string.Empty;
 
-         int Valid ,
+        public string? UserDescreption { get; init; } = string.Empty;
 
-         string UserDescription ,
+        public int Valid { get; init; }
 
-         string PlatformName 
 
-    );
+        public string PlatformName { get; init; } = string.Empty;
+
+        public long ProductID { get; init; }
+
+        public long? UserDescreptionID { get; init; }
+
+        public long PlatformID { get; init; }
+    }
 }

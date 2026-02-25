@@ -1,4 +1,4 @@
-﻿using DTO;
+using DTO;
 using Repositories;
 using System;
 using System.Collections.Generic;
@@ -12,9 +12,9 @@ namespace Services
     public class MainCategoriesServise : IMainCategoriesServise
     {
 
-        IMainCategoriesReposetory _mainCategoryReposetory;
-        ICategoriesReposetory _categoriesReposetory;
-        IMapper _mapper;
+        private readonly IMainCategoriesReposetory _mainCategoryReposetory;
+        private readonly ICategoriesReposetory _categoriesReposetory;
+        private readonly IMapper _mapper;
         public MainCategoriesServise(IMainCategoriesReposetory mainCategoryReposetory, IMapper mapper, ICategoriesReposetory categoriesReposetory)
         {
             this._mainCategoryReposetory = mainCategoryReposetory;
@@ -38,7 +38,7 @@ namespace Services
             return _mapper.Map<MainCategoriesDTO>(mainCategoryFromeposetory);
         }
 
-        async public Task<Resulte<MainCategoriesDTO>> UpdateMainCategoriesServises(int id, MainCategoriesDTO MainCategoriesFromController)
+        async public Task<Resulte<MainCategoriesDTO>> UpdateMainCategoriesServises(long id, MainCategoriesDTO MainCategoriesFromController)
         {
             if (id != MainCategoriesFromController.MainCategoryID)
             {
@@ -59,7 +59,7 @@ namespace Services
             return Resulte<MainCategoriesDTO>.Success(null);
         }
 
-        async public Task<Resulte<MainCategoriesDTO>> DeleteMainCategoriesServises(int id)
+        async public Task<Resulte<MainCategoriesDTO>> DeleteMainCategoriesServises(long id)
         {
             Category? checkIfThereIsCategories = await _categoriesReposetory.GetByMainCategoriesIDReposetory(id);
             if (checkIfThereIsCategories != null)

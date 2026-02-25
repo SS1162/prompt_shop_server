@@ -5,10 +5,10 @@ namespace Repositories
     public interface IPlatformsReposetory
     {
         Task<Platform> AddPlatformReposetory(Platform platform);
-        Task DeletePlatformReposetory(int id);
+        Task DeletePlatformReposetory(long id);
         Task<IEnumerable<Platform>> GetPlatformsReposetory();
-        Task UpdatePlatformReposetory(int id, Platform platform);
-        Task<Platform?> GetByIDPlatformsReposetory(int id);
+        Task UpdatePlatformReposetory(long id, Platform platform);
+        Task<Platform?> GetByIDPlatformsReposetory(long id);
 
     }
 }

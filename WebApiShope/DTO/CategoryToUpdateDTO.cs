@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,10 +11,10 @@ namespace DTO
     public record CategoryToUpdateDTO
     (
         [Required]
-         int CategoryID,
+         long CategoryID,
 
         [Required]
-         int MainCategoryID,
+         long MainCategoryID,
 
         [Required]
          string CategoryName,

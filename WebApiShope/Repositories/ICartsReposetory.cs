@@ -1,21 +1,21 @@
-﻿using Entities;
+using Entities;
 
 namespace Repositories
 {
     public interface ICartsReposetory
     {
-        Task ChangeProductToNotValidReposetory(int Id);
-        Task ChangeProductToValidReposetory(int Id);
+        Task ChangeProductToNotValidReposetory(long Id);
+        Task ChangeProductToValidReposetory(long Id);
         Task<CartItem> CreateUserCartReposetory(CartItem cartItem);
-        Task DeleteUserCartItemReposetory(int Id);
-        Task DeleteUserCartReposetory(int userID);
-        Task<CartItem?> GetByIdReposetory(int id);
-        Task<IEnumerable<CartItem>> GetByIDUserCartItemsReposetory(int Id);
-        Task<CartItem?> GetByUserAndProductIdReposetory(int userId, int productId);
+        Task DeleteUserCartItemReposetory(long Id);
+        Task DeleteUserCartReposetory(long userID);
+        Task<CartItem?> GetByIdReposetory(long id);
+        Task<IEnumerable<CartItem>> GetByIDUserCartItemsReposetory(long Id);
+        Task<CartItem?> GetByUserAndProductIdReposetory(long userId, long productId);
 
-        Task<CartItem?> CheckIfHasPlatformByPlatformID(int Id);
+        Task<CartItem?> CheckIfHasPlatformByPlatformID(long Id);
 
-        Task<CartItem?> CheckIfHasProductByProductID(int Id);
+        Task<CartItem?> CheckIfHasProductByProductID(long Id);
 
     }
 }

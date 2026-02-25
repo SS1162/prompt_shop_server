@@ -10,7 +10,7 @@ namespace DTO
     public record UserDTO
     (
         [Required]
-         string UserID ,
+         long UserID ,
 
         [EmailAddress]
         [Required]
@@ -22,7 +22,9 @@ namespace DTO
          string LastName ,
 
         [Phone]
-         string Phone 
+         string Phone ,
+
+        long BasicID
 
     );
 }

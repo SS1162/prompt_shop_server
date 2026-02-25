@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,7 @@ namespace DTO
 {
     public record MainCategoriesDTO
     (
-         int MainCategoryID ,
+         long MainCategoryID ,
 
          string MainCategoryName 
     );

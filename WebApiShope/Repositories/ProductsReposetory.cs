@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,13 +11,13 @@ namespace Repositories
 {
     public class ProductsReposetory : IProductsReposetory
     {
-        MyShop330683525Context _DBContext;
+        private readonly MyShop330683525Context _DBContext;
         public ProductsReposetory(MyShop330683525Context _DBContext)
         {
             this._DBContext = _DBContext;
         }
 
-        async public Task<(IEnumerable<Product>items,int totalCount)> GetProductsReposetory(int categoryID, int numOfPages, int PageSize, string? search,int? minPrice ,int? MaxPrice, bool? orderByPrice, bool? desc)
+        async public Task<(IEnumerable<Product>items,int totalCount)> GetProductsReposetory(long categoryID, int numOfPages, int PageSize, string? search,int? minPrice ,int? MaxPrice, bool? orderByPrice, bool? desc)
         {
            var quary= _DBContext.Products.Where(product =>
                 (product.CategoryId == categoryID) &&
@@ -30,7 +30,7 @@ namespace Repositories
                  quary = quary.OrderByDescending(x=>x.Price);
 
             }
-            if (orderByPrice != null && (desc == null||desc==false)&& orderByPrice != false)
+            else if (orderByPrice != null && (desc == null||desc==false)&& orderByPrice != false)
             {
                 quary  = quary.OrderBy(x => x.Price);
             }
@@ -45,9 +45,9 @@ namespace Repositories
             return (items, total);
         }
 
-        async public Task<Product?>  HasProductsToCatrgoryReposetory(int categoryID)
+        async public Task<Product?>  HasProductsToCatrgoryReposetory(long categoryID)
         {
-            return await _DBContext.Products.FirstOrDefaultAsync(x => x.CategoryId == categoryID);
+            return await _DBContext.Products.AsNoTracking().FirstOrDefaultAsync(x => x.CategoryId == categoryID);
         }
 
         async public Task<Product> AddProductsReposetory(Product product)
@@ -57,19 +57,23 @@ namespace Repositories
             return product;
         }
 
-        async public Task UpdateProductsReposetory(int id, Product product)
+        async public Task UpdateProductsReposetory(long id, Product product)
         {
             _DBContext.Products.Update(product);
             await _DBContext.SaveChangesAsync();
         }
 
-        async public Task<Product?> GetByIDProductsReposetory(int id)
+        async public Task<Product?> GetByIDProductsReposetory(long id)
         {
-           return await _DBContext.Products.FirstOrDefaultAsync(x=>x.ProductsId == id);
+           return await _DBContext.Products.AsNoTracking().FirstOrDefaultAsync(x=>x.ProductsId == id);
         }
 
+        async public Task<IEnumerable<Product>> GetProductsReposetory()
+        {
+            return await _DBContext.Products.Include(p => p.Category).ToListAsync();
+        }
 
-        async public Task DeleteProductsReposetory(int id)
+        async public Task DeleteProductsReposetory(long id)
         {
             Product productObjectToDelete = await _DBContext.Products.FirstOrDefaultAsync(x => x.ProductsId == id);
 

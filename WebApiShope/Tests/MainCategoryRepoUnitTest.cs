@@ -1,4 +1,4 @@
-﻿using Entities;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 using MockQueryable.Moq;
 using Moq;
@@ -168,7 +168,7 @@ public class MainCategoryGetTests : IClassFixture<MainCategoryRepoFixture>
     public async Task DeleteMainCategory_HappyPath_CallsRemoveAndSave()
     {
         // Arrange
-        int idToDelete = 1;
+        long idToDelete = 1;
 
         // Act
         await _repository.DeleteMainCategoriesReposetoty(idToDelete);

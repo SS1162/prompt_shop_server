@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +8,9 @@ namespace DTO
 {
     public  record UserOrdersDTO
     (
-         int UserID,
+         long UserID,
 
-         int OrderID ,
+         long OrderID ,
          DateTime OrderDate ,
          float OrderSum ,
          string SiteName ,

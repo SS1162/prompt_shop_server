@@ -4,6 +4,6 @@ namespace Repositories
 {
     public interface IStatusesReposetory
     {
-        Task<Status?> GetStatusByID(int statusID);
+        Task<Status?> GetStatusByID(long statusID);
     }
 }

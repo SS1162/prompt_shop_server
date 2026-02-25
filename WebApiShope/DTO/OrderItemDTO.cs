@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ namespace DTO
     public record OrderItemDTO
     (
 
-        int OrderItemID ,
+        long OrderItemID ,
 
         string UserDescription ,
 
@@ -25,9 +25,9 @@ namespace DTO
 
         string CategoryDescreption ,
 
-        int orderID,
+        long orderID,
 
-        int UserDescriptionID
+        long UserDescriptionID
 
     );
 }

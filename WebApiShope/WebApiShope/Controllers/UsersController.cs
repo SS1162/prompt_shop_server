@@ -15,16 +15,14 @@ namespace WebApiShope.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private IUsersService _usersService;
+        private readonly IUsersService _usersService;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<UsersController> _logger;
 
-      
-
-        ILogger<UsersController> _logger;
-
-        public UsersController(IUsersService usersService, ILogger<UsersController> logger)
+        public UsersController(IUsersService usersService, ILogger<UsersController> logger, IConfiguration configuration)
         {
             this._usersService = usersService;
-           
+            this._configuration = configuration;
             this._logger = logger;  
         }
 
@@ -41,7 +39,7 @@ namespace WebApiShope.Controllers
 
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDTO>> GetUserById(int id)
+        public async Task<ActionResult<UserDTO>> GetUserById(long id)
         {
 
             UserDTO user = await _usersService.GetByIDUsersService(id);
@@ -76,20 +74,26 @@ namespace WebApiShope.Controllers
 
         }
 
-
+        [HttpPost("signInWithGoogle")]
+        public async Task<ActionResult<UserDTO>> SignInWithGoogle([FromBody] RegisterUserDTO userFromUser)
+        {
+           UserDTO reaspne = await _usersService.SignInWithGoogleServise(userFromUser);
+         
+            return Ok(reaspne);
+        }
         [HttpPost]
         public async Task<ActionResult<UserDTO>> AddNewUser([FromBody] RegisterUserDTO userFromUser)
         {
             Resulte<UserDTO> reaspne = await _usersService.AddNewUsersService(userFromUser);
             if(!reaspne.IsSuccess)
             {
-                return   BadRequest( reaspne.ErrorMessage);
+                return   BadRequest(reaspne.ErrorMessage);
             }
                 return CreatedAtAction(nameof(GetUserById), new { id = reaspne.Data.UserID }, reaspne.Data);
         }
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        async public Task<ActionResult> Put(int id, [FromBody] UpdateUserDTO user)
+        async public Task<ActionResult> Put(long id, [FromBody] UpdateUserDTO user)
         {
 
             Resulte < UserDTO >  reaspone= await _usersService.UpdateUsersService(id, user);
@@ -98,6 +102,24 @@ namespace WebApiShope.Controllers
                 return BadRequest(reaspone.ErrorMessage);
             }
             return Ok();
+        }
+
+
+         [HttpGet("isAdmin/{id}")]
+        public async Task<ActionResult<UserDTO>> CheckIsAdmin( long id)
+        {
+          LoginUserDTO logInUser =new LoginUserDTO(_configuration["AdminName"], _configuration["AdminPassword"]);
+          UserDTO user = await _usersService.LoginUsersService(logInUser);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+            if(user.UserID != id)
+            {
+                return Ok(false);
+            }
+            else
+                return Ok(true);
         }
 
 

@@ -1,4 +1,4 @@
-﻿using DTO;
+using DTO;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 
@@ -11,7 +11,7 @@ namespace WebApiShope.Controllers
     [ApiController]
     public class SiteTypesController : ControllerBase
     {
-        ISiteTypesService _siteTypesService;
+        private readonly ISiteTypesService _siteTypesService;
         public SiteTypesController(ISiteTypesService siteTypesService)
         {
             this._siteTypesService = siteTypesService;
@@ -31,7 +31,7 @@ namespace WebApiShope.Controllers
 
         // GET api/<SiteTypeController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<SiteTypeDTO>> GetById(int id)
+        public async Task<ActionResult<SiteTypeDTO>> GetById(long id)
         {
             SiteTypeDTO? siteType = await _siteTypesService.GetSiteTypesByIdServise(id);
             if(siteType == null )
@@ -46,7 +46,7 @@ namespace WebApiShope.Controllers
         }
 
         [HttpPut("{id}/manager")]
-        public async Task<ActionResult> UpdateByMng(int id, SiteTypeDTO dto)
+        public async Task<ActionResult> UpdateByMng(long id, SiteTypeDTO dto)
         {
 
              Resulte<SiteTypeDTO> reaspone=await _siteTypesService.UpdateSiteTypesByMngServise(id, dto);

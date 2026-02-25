@@ -10,17 +10,18 @@ namespace DTO
     public record UpdateUserDTO
     (
         [Required]
-         short UserId ,
+         long UserId ,
 
-         string Password ,
+         string? Password ,
         [EmailAddress]
         [Required]
          string UserName ,
 
-         string FirstName ,
+         string? FirstName ,
 
-         string LastName ,
+         string? LastName ,
         [Phone]
-         string Phone 
+         string? Phone,
+        long? BasicID
     );
 }

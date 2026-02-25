@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,11 +11,11 @@ namespace DTO
     (
         [Required]
      string SiteName,
-    string UserDescreption,
-      [Required]
-     int SiteTypeID,
+    string? UserDescreption,
+      
+     long? SiteTypeID,
         [Required]
-     int PlatformID
+     long PlatformID
 );
     
 }

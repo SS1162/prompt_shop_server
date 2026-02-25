@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ namespace Services
 {
     public class RatingsServise : IRatingsServise
     {
-        IRatingsReposetory _ratingsReposetory;
+        private readonly IRatingsReposetory _ratingsReposetory;
         public RatingsServise(IRatingsReposetory ratingsReposetory)
         {
             _ratingsReposetory = ratingsReposetory;

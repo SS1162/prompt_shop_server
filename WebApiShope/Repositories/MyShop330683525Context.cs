@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Entities;
-
 namespace Repositories;
 
 public partial class MyShop330683525Context : DbContext
@@ -46,26 +45,29 @@ public partial class MyShop330683525Context : DbContext
     {
         modelBuilder.Entity<BasicSite>(entity =>
         {
-            entity.HasKey(e => e.BasicSiteId).HasName("PK__BasicSit__FFB1C8E08E5E4830");
+            entity.HasKey(e => e.BasicSiteId).HasName("PK__BasicSit__FFB1C8E08C73AAF1");
 
             entity.Property(e => e.BasicSiteId).HasColumnName("BasicSiteID");
             entity.Property(e => e.SiteName).HasMaxLength(150);
             entity.Property(e => e.SiteTypeId).HasColumnName("SiteTypeID");
-            entity.Property(e => e.UserDescreption).HasMaxLength(500);
 
             entity.HasOne(d => d.BasicSitesPlatformsNavigation).WithMany(p => p.BasicSites)
                 .HasForeignKey(d => d.BasicSitesPlatforms)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BasicSite__Basic__5EBF139D");
+                .HasConstraintName("FK__BasicSite__Basic__60A75C0F");
 
             entity.HasOne(d => d.SiteType).WithMany(p => p.BasicSites)
                 .HasForeignKey(d => d.SiteTypeId)
-                .HasConstraintName("FK__BasicSite__SiteT__5DCAEF64");
+                .HasConstraintName("FK__BasicSite__SiteT__5EBF139D");
+
+            entity.HasOne(d => d.UserDescriptionNavigation).WithMany(p => p.BasicSites)
+                .HasForeignKey(d => d.UserDescription)
+                .HasConstraintName("FK__BasicSite__UserD__5FB337D6");
         });
 
         modelBuilder.Entity<CartItem>(entity =>
         {
-            entity.HasKey(e => e.CartId).HasName("PK__CartItem__51BCD79702E7B6F6");
+            entity.HasKey(e => e.CartId).HasName("PK__CartItem__51BCD7974A8D5B28");
 
             entity.Property(e => e.CartId).HasColumnName("CartID");
             entity.Property(e => e.ProductsId).HasColumnName("ProductsID");
@@ -75,39 +77,36 @@ public partial class MyShop330683525Context : DbContext
             entity.HasOne(d => d.BasicSitesPlatformsNavigation).WithMany(p => p.CartItems)
                 .HasForeignKey(d => d.BasicSitesPlatforms)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CartItems__Basic__787EE5A0");
+                .HasConstraintName("FK__CartItems__Basic__73BA3083");
 
             entity.HasOne(d => d.Products).WithMany(p => p.CartItems)
                 .HasForeignKey(d => d.ProductsId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CartItems__Produ__75A278F5");
+                .HasConstraintName("FK__CartItems__Produ__70DDC3D8");
 
             entity.HasOne(d => d.UserDescriptionNavigation).WithMany(p => p.CartItems)
                 .HasForeignKey(d => d.UserDescription)
-                .HasConstraintName("FK__CartItems__UserD__778AC167");
+                .HasConstraintName("FK__CartItems__UserD__72C60C4A");
 
             entity.HasOne(d => d.User).WithMany(p => p.CartItems)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CartItems__UserI__74AE54BC");
+                .HasConstraintName("FK__CartItems__UserI__6FE99F9F");
         });
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2B21BB78FC");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2B2C41448C");
 
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryDescreption)
                 .IsRequired()
-                .HasMaxLength(300)
                 .IsUnicode(false);
             entity.Property(e => e.CategoryName)
                 .IsRequired()
-                .HasMaxLength(150)
                 .IsUnicode(false);
             entity.Property(e => e.CategoryPrompt)
                 .IsRequired()
-                .HasMaxLength(300)
                 .IsUnicode(false);
             entity.Property(e => e.ImgUrl)
                 .IsRequired()
@@ -118,34 +117,29 @@ public partial class MyShop330683525Context : DbContext
             entity.HasOne(d => d.MainCategory).WithMany(p => p.Categories)
                 .HasForeignKey(d => d.MainCategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Categorie__MainC__4CA06362");
+                .HasConstraintName("FK__Categorie__MainC__4D94879B");
         });
 
-
-
-  
         modelBuilder.Entity<GeminiPrompt>(entity =>
         {
-            entity.HasKey(e => e.PromptId).HasName("PK__GeminiPr__456CA7737F08A92A");
+            entity.HasKey(e => e.PromptId).HasName("PK__GeminiPr__456CA7731D9C5917");
 
             entity.ToTable("GeminiPrompt");
 
             entity.Property(e => e.PromptId).HasColumnName("PromptID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
-            entity.Property(e => e.ProductsId).HasColumnName("ProductsID");
             entity.Property(e => e.Prompt).IsRequired();
+
+            entity.HasOne(d => d.Category).WithMany(p => p.GeminiPrompts)
+                .HasForeignKey(d => d.CategoryId)
+                .HasConstraintName("FK__GeminiPro__Categ__5441852A");
         });
 
-        OnModelCreatingPartial(modelBuilder);
-    
-
-
-
-    modelBuilder.Entity<MainCategory>(entity =>
+        modelBuilder.Entity<MainCategory>(entity =>
         {
-            entity.HasKey(e => e.MainCategoryId).HasName("PK__MainCate__0290BDB6CFDB9DB3");
+            entity.HasKey(e => e.MainCategoryId).HasName("PK__MainCate__0290BDB6238CABD2");
 
-            entity.HasIndex(e => e.MainCategoryName, "UQ__MainCate__121AD3E339D4A80C").IsUnique();
+            entity.HasIndex(e => e.MainCategoryName, "UQ__MainCate__121AD3E399483DB4").IsUnique();
 
             entity.Property(e => e.MainCategoryId).HasColumnName("MainCategoryID");
             entity.Property(e => e.MainCategoryName)
@@ -154,13 +148,12 @@ public partial class MyShop330683525Context : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.MainCategoryPrompt)
                 .IsRequired()
-                .HasMaxLength(300)
                 .IsUnicode(false);
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAFF43A1C7D");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAF4C446210");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.BasicId).HasColumnName("BasicID");
@@ -172,25 +165,25 @@ public partial class MyShop330683525Context : DbContext
             entity.HasOne(d => d.Basic).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.BasicId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Orders__BasicID__693CA210");
+                .HasConstraintName("FK__Orders__BasicID__6B24EA82");
 
             entity.HasOne(d => d.Review).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.ReviewId)
-                .HasConstraintName("FK__Orders__ReviewID__6B24EA82");
+                .HasConstraintName("FK__Orders__ReviewID__6D0D32F4");
 
             entity.HasOne(d => d.Status).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.StatusId)
-                .HasConstraintName("FK__Orders__StatusID__6A30C649");
+                .HasConstraintName("FK__Orders__StatusID__6C190EBB");
 
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Orders__UserID__68487DD7");
+                .HasConstraintName("FK__Orders__UserID__6A30C649");
         });
 
         modelBuilder.Entity<OrdersItem>(entity =>
         {
-            entity.HasKey(e => e.OrderItemId).HasName("PK__OrdersIt__57ED06A15E178538");
+            entity.HasKey(e => e.OrderItemId).HasName("PK__OrdersIt__57ED06A184A30301");
 
             entity.Property(e => e.OrderItemId).HasColumnName("OrderItemID");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
@@ -199,28 +192,28 @@ public partial class MyShop330683525Context : DbContext
             entity.HasOne(d => d.BasicSitesPlatformsNavigation).WithMany(p => p.OrdersItems)
                 .HasForeignKey(d => d.BasicSitesPlatforms)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrdersIte__Basic__7E37BEF6");
+                .HasConstraintName("FK__OrdersIte__Basic__797309D9");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrdersItems)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrdersIte__Order__7C4F7684");
+                .HasConstraintName("FK__OrdersIte__Order__778AC167");
 
             entity.HasOne(d => d.Products).WithMany(p => p.OrdersItems)
                 .HasForeignKey(d => d.ProductsId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrdersIte__Produ__7B5B524B");
+                .HasConstraintName("FK__OrdersIte__Produ__76969D2E");
 
             entity.HasOne(d => d.UserDescriptionNavigation).WithMany(p => p.OrdersItems)
                 .HasForeignKey(d => d.UserDescription)
-                .HasConstraintName("FK__OrdersIte__UserD__7D439ABD");
+                .HasConstraintName("FK__OrdersIte__UserD__787EE5A0");
         });
 
         modelBuilder.Entity<Platform>(entity =>
         {
-            entity.HasKey(e => e.PlatformId).HasName("PK__Platform__F559F6DAEF5E79EA");
+            entity.HasKey(e => e.PlatformId).HasName("PK__Platform__F559F6DACDFB2FCA");
 
-            entity.HasIndex(e => e.PlatformName, "UQ__Platform__85614BEE9999153D").IsUnique();
+            entity.HasIndex(e => e.PlatformName, "UQ__Platform__85614BEE290C0594").IsUnique();
 
             entity.Property(e => e.PlatformId).HasColumnName("PlatformID");
             entity.Property(e => e.PlatformName)
@@ -235,28 +228,26 @@ public partial class MyShop330683525Context : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductsId).HasName("PK__Products__BB48EDC580561590");
+            entity.HasKey(e => e.ProductsId).HasName("PK__Products__BB48EDC5C71866C4");
 
             entity.Property(e => e.ProductsId).HasColumnName("ProductsID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.ProductPrompt)
                 .IsRequired()
-                .HasMaxLength(300)
                 .IsUnicode(false);
             entity.Property(e => e.ProductsName)
                 .IsRequired()
-                .HasMaxLength(150)
                 .IsUnicode(false);
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Products__Catego__4F7CD00D");
+                .HasConstraintName("FK__Products__Catego__5070F446");
         });
 
         modelBuilder.Entity<Rating>(entity =>
         {
-            entity.HasKey(e => e.RatingId).HasName("PK__Ratings__FCCDF85CE6C0C50C");
+            entity.HasKey(e => e.RatingId).HasName("PK__Ratings__FCCDF85CDD5F1398");
 
             entity.Property(e => e.RatingId).HasColumnName("RatingID");
             entity.Property(e => e.Host).HasMaxLength(50);
@@ -270,7 +261,7 @@ public partial class MyShop330683525Context : DbContext
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.ReviewId).HasName("PK__Review__74BC79AE05B3137B");
+            entity.HasKey(e => e.ReviewId).HasName("PK__Review__74BC79AE80D846EC");
 
             entity.ToTable("Review");
 
@@ -280,20 +271,17 @@ public partial class MyShop330683525Context : DbContext
 
         modelBuilder.Entity<SiteType>(entity =>
         {
-            entity.HasKey(e => e.SiteTypeId).HasName("PK__SiteType__85A71C86534F172E");
+            entity.HasKey(e => e.SiteTypeId).HasName("PK__SiteType__85A71C863399C56D");
 
             entity.Property(e => e.SiteTypeId).HasColumnName("SiteTypeID");
             entity.Property(e => e.DescreptionPrompt)
                 .IsRequired()
-                .HasMaxLength(300)
                 .IsUnicode(false);
             entity.Property(e => e.NamePrompt)
                 .IsRequired()
-                .HasMaxLength(300)
                 .IsUnicode(false);
             entity.Property(e => e.SiteTypeDescreption)
                 .IsRequired()
-                .HasMaxLength(300)
                 .IsUnicode(false);
             entity.Property(e => e.SiteTypeName)
                 .IsRequired()
@@ -303,7 +291,7 @@ public partial class MyShop330683525Context : DbContext
 
         modelBuilder.Entity<Status>(entity =>
         {
-            entity.HasKey(e => e.StatusId).HasName("PK__Statuses__C8EE2043BCD0CB43");
+            entity.HasKey(e => e.StatusId).HasName("PK__Statuses__C8EE2043427EB963");
 
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
             entity.Property(e => e.StatusName)
@@ -313,11 +301,12 @@ public partial class MyShop330683525Context : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC3C280D0F");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC3B95D3E9");
 
-            entity.HasIndex(e => e.UserName, "UQ__Users__C9F28456F044353C").IsUnique();
+            entity.HasIndex(e => e.UserName, "UQ__Users__C9F284568D12EF60").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.Property(e => e.GoogleId).HasColumnName("GoogleID");
             entity.Property(e => e.BasicId).HasColumnName("BasicID");
             entity.Property(e => e.FirstName).HasMaxLength(100);
             entity.Property(e => e.LastName).HasMaxLength(100);
@@ -331,7 +320,7 @@ public partial class MyShop330683525Context : DbContext
 
             entity.HasOne(d => d.Basic).WithMany(p => p.Users)
                 .HasForeignKey(d => d.BasicId)
-                .HasConstraintName("FK__Users__BasicID__628FA481");
+                .HasConstraintName("FK__Users__BasicID__6477ECF3");
         });
 
         OnModelCreatingPartial(modelBuilder);

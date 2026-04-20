@@ -74,18 +74,6 @@ namespace WebApiShope.Controllers
         }
 
 
-        // GET api/<ProductsController>/5
-        [HttpGet("{id}")]
-        async public Task<ActionResult<ProductDTO>> GetById(long id)
-        {
-            Resulte<ProductDTO> respone = await _productsServise.GetByIDProductServise(id);
-            if (!respone.IsSuccess)
-            {
-                return BadRequest(respone.ErrorMessage);
-            }
-            return Ok(respone.Data);
-        }
-
         [HttpGet("admin")]
         async public Task<ActionResult<IEnumerable<ProductDTO>>> GetAll()
         {

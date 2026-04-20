@@ -5,6 +5,7 @@ using Services;
 using WebApiShope.MiddleWare;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IUsersReposetory, UsersReposetory>();
 
@@ -79,10 +80,13 @@ builder.Services.AddCors(options =>
                         .AllowAnyHeader());
 });
 
-builder.Services.AddDbContext<MyShop330683525Context>(option => option.UseSqlServer
-("Data Source=DESKTOP-R5RADSP;Initial Catalog=MyPromptShop;Integrated Security=True;Trust Server Certificate=True"));
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Add services to the container.
+
+builder.Services.AddDbContext<MyShop330683525Context>(options =>
+    options.UseSqlServer(connectionString));
+
+
 
 builder.Services.AddControllers();
 

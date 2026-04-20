@@ -8,11 +8,9 @@ namespace DTO
 {
     public record SiteTypeDTO
     (
-         long SiteTypeID ,
+         long? SiteTypeID ,
 
         string SiteTypeName ,
-
-
 
         string SiteTypeDescreption ,
 

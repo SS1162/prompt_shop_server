@@ -80,10 +80,10 @@ namespace Services
                 sum += checkProductPrice.Price;
             }
 
-            if (dto.OrderSum != sum)
-            {
-                return Resulte<FullOrderDTO>.Failure("The sum is incorect");
-            }
+            //if (dto.OrderSum != sum)
+            //{
+            //    return Resulte<FullOrderDTO>.Failure("The sum is incorect");
+            //}
 
              Order orderToReposetory = _mapper.Map<Order>(dto);
             orderToReposetory.StatusId = 1;

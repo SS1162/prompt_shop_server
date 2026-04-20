@@ -8,14 +8,15 @@ using System.Threading.Tasks;
 namespace DTO
 {
     public record AddBasicSiteDTO
-    (
+    {
         [Required]
-     string SiteName,
-    string? UserDescreption,
-      
-     long? SiteTypeID,
-        [Required]
-     long PlatformID
-);
+        public string SiteName { get; set; }
+
+        public long? UserDescreption { get; set; }
+        public long? SiteTypeID { get; set; }
+
+        public long PlatformID { get; set; }
+
+    }
     
 }

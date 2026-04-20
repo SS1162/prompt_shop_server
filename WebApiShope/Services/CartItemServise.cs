@@ -64,7 +64,7 @@ namespace Services
             {
                 return Resulte<CartItemDTO>.Failure("The product is empty so you must add user description");
             }
-            if (checkIfProductInsist.ProductsName != "Empty" && dto.UserDescription != null)
+            if (checkIfProductInsist.ProductsName.Trim() != "Empty" && dto.UserDescription != null)
             {
                 return Resulte<CartItemDTO>.Failure("The product isn't empty so you musn't add user description");
             }
@@ -75,7 +75,7 @@ namespace Services
             }
 
             CartItem? existing = await _cartsReposetory.GetByUserAndProductIdReposetory(dto.UserID, dto.ProductsID);
-            if (existing != null)
+            if (existing != null&& checkIfProductInsist.ProductsName.Trim() != "Empty")
             {
                 return Resulte<CartItemDTO>.Failure("Cart item already exists for this user and product.");
             }

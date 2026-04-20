@@ -1,6 +1,7 @@
 using AutoMapper;
 using DTO;
 using Entities;
+using Humanizer;
 using Repositories;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,20 @@ namespace Services
             return Resulte<SiteTypeDTO>.Success(null);
         }
 
+        public async Task<Resulte<SiteTypeDTO>> DeleteSiteTypeServise(long id)
+        {
+           SiteType? siteType = await _siteTypesRepository.GetSiteTypeByIdReposetory(id);
+            if (siteType==null)
+            {
+                return Resulte<SiteTypeDTO>.Failure("The site type isint insist ");
+            }
+            await _siteTypesRepository.DeleteSiteTypeByMngReposetory(id);
+
+            return Resulte<SiteTypeDTO>.Success(null);
+        }
+
+
+        
 
 
     }

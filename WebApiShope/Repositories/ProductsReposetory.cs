@@ -30,7 +30,7 @@ namespace Repositories
                  quary = quary.OrderByDescending(x=>x.Price);
 
             }
-            if (orderByPrice != null && (desc == null||desc==false)&& orderByPrice != false)
+            else if (orderByPrice != null && (desc == null||desc==false)&& orderByPrice != false)
             {
                 quary  = quary.OrderBy(x => x.Price);
             }
@@ -81,8 +81,6 @@ namespace Repositories
             await _DBContext.SaveChangesAsync();
            
         }
-
-
 
 
     }

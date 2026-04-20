@@ -134,5 +134,15 @@ namespace Services
             return _mapper.Map<IEnumerable<ProductDTO>>(await _productsReposetory.GetProductsReposetory());
 
         }
+
+        async public Task<Resulte<ProductDTO>> GetByIDProductServise(long id)
+        {
+            Product? product = await _productsReposetory.GetByIDProductsReposetory(id);
+            if (product == null)
+            {
+                return Resulte<ProductDTO>.Failure("Product not found");
+            }
+            return Resulte<ProductDTO>.Success(_mapper.Map<ProductDTO>(product));
+        }
     }
 }

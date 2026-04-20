@@ -30,7 +30,7 @@ namespace WebApiShope.Controllers
 
 
         // POST api/<MainCategoriesController>
-        [HttpPost]
+        [HttpPost("admin")]
         async public Task<ActionResult<MainCategoriesDTO>> AddMainCategory([FromBody] ManegerMainCategoryDTO manegerMainCategory)
         {
             MainCategoriesDTO mainCategoryConstructedObject = await _mainCategoriesServise.AddMainCategoriesServises(manegerMainCategory);
@@ -38,7 +38,7 @@ namespace WebApiShope.Controllers
         }
 
         // PUT api/<MainCategoriesController>/5
-        [HttpPut("{id}")]
+        [HttpPut("admin/{id}")]
         async public Task<ActionResult> UpdateMainCategory(long id, [FromBody] MainCategoriesDTO mainCategory)
         {
             Resulte<MainCategoriesDTO> respone= await _mainCategoriesServise.UpdateMainCategoriesServises(id, mainCategory);
@@ -50,7 +50,7 @@ namespace WebApiShope.Controllers
         }
 
         // DELETE api/<MainCategoriesController>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("admin/{id}")]
         async public Task<ActionResult> Delete(long id)
         {
             Resulte<MainCategoriesDTO> respone = await _mainCategoriesServise.DeleteMainCategoriesServises(id);

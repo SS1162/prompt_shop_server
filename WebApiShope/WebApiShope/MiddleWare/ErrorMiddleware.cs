@@ -8,8 +8,8 @@ namespace WebApiShope.MiddleWare
     public class ErrorMiddleware
     {
         private readonly RequestDelegate _next;
-
         private readonly ILogger<ErrorMiddleware> _logger;
+        
         public ErrorMiddleware(RequestDelegate next, ILogger<ErrorMiddleware> logger)
         {
             _next = next;

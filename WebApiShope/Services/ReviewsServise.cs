@@ -65,7 +65,7 @@ namespace Services
                         Quality = 75
                     };
 
-                    string physicalPath = Path.Combine(_env.WebRootPath, "reviews", review.ReviewImg.FileName);
+                    string physicalPath = Path.Combine(_env.WebRootPath, "reviews", review.ReviewImg.FileName+ ".jpeg");
                     await image.SaveAsync(physicalPath, encoder);
                 }
                 reviewToReposetory.ReviewImg = review.ReviewImg.FileName;

@@ -1,4 +1,5 @@
-using DTO;
+﻿using DTO;
+using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 
@@ -45,7 +46,7 @@ namespace WebApiShope.Controllers
         {
         }
 
-        [HttpPut("{id}/manager")]
+        [HttpPut("admin/{id}")]
         public async Task<ActionResult> UpdateByMng(long id, SiteTypeDTO dto)
         {
 
@@ -56,6 +57,25 @@ namespace WebApiShope.Controllers
             }
             return Ok();    
         }
+
+        [HttpDelete("admin/{id}")]
+        async public Task<ActionResult> Delete(long id)
+        {
+            Resulte<SiteTypeDTO> respone = await _siteTypesService.DeleteSiteTypeServise(id);
+            if (!respone.IsSuccess)
+            {
+                return BadRequest(respone.ErrorMessage);
+            }
+            return BadRequest();
+        }
+
+        //// POST api/<MainCategoriesController>
+        //[HttpPost("admin")]
+        //async public Task<ActionResult<SiteTypeDTO>> AddSiteType([FromBody] SiteTypeDTO siteType)
+        //{
+        //    SiteTypeDTO siteType = await _mainCategoriesServise.AddMainCategoriesServises(manegerMainCategory);
+        //    return CreatedAtAction(nameof(Get), new { id = mainCategoryConstructedObject.MainCategoryID }, mainCategoryConstructedObject);
+        //}
 
 
     }

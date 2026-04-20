@@ -31,6 +31,18 @@ namespace Repositories
 
         }
 
+
+        public async Task DeleteSiteTypeByMngReposetory(long id)
+        {
+
+            SiteType siteType = await _DBcontext.SiteTypes.FirstOrDefaultAsync(x => x.SiteTypeId == id);
+
+            _DBcontext.SiteTypes.Remove(siteType);
+            await _DBcontext.SaveChangesAsync();
+
+
+        }
+
     }
 }
 

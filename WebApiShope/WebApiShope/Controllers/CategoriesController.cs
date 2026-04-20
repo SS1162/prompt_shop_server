@@ -45,7 +45,7 @@ namespace WebApiShope.Controllers
         }
 
         // POST api/<CategoryController>
-        [HttpPost("admin")]
+        [HttpPost]
         async public Task<ActionResult<CategoryDTO>> AddCategory([FromForm] AddCategoryDTO category)
         {
             Resulte<CategoryDTO> categoryConstructedObject = await _categoriesServise.AddCategoriesServise(category);
@@ -58,7 +58,7 @@ namespace WebApiShope.Controllers
         }
 
         // PUT api/<CategoryController>/5
-        [HttpPut("admin/{id}")]
+        [HttpPut("{id}")]
         async public Task<ActionResult> UpdateCategory(long id, [FromForm] CategoryToUpdateDTO category)
         {
             Resulte<CategoryDTO> respone = await _categoriesServise.UpdateCategoriesServise(id, category);
@@ -70,7 +70,7 @@ namespace WebApiShope.Controllers
         }
 
         // DELETE api/<CategoryController>/5
-        [HttpDelete("admin/{id}")]
+        [HttpDelete("{id}")]
         async public Task<ActionResult> DeleteCategoty(long id)
         {
             Resulte<CategoryDTO> respone = await _categoriesServise.DeleteIDCategoriesServise(id);

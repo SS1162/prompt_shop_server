@@ -1,7 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using Repositories;
 using Services;
+using StackExchange.Redis;
+using System.Text;
 using WebApiShope.MiddleWare;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -66,18 +70,59 @@ builder.Services.AddScoped<ICategoriesServise, CategoriesServise>();
 
 builder.Services.AddScoped<ICategoriesReposetory, CategoriesReposetory>();
 
+var categoryCacheOptions = builder.Configuration
+    .GetSection(CategoryCacheOptions.SectionName)
+    .Get<CategoryCacheOptions>() ?? new CategoryCacheOptions();
+builder.Services.AddSingleton(categoryCacheOptions);
+
 builder.Services.AddScoped<IProductsServise, ProductsServise>();
 
 builder.Services.AddScoped<ICartItemServise, CartItemServise>();
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// ── Redis & Rate Limiting ────────────────────────────────────────────────────
+// IConnectionMultiplexer is thread-safe and designed to be a long-lived singleton.
+builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
+    ConnectionMultiplexer.Connect(
+        builder.Configuration["Redis:ConnectionString"] ?? "localhost:6379"));
+
+builder.Services.AddSingleton<IRedisRateLimitService, RedisRateLimitService>();
+
+builder.Services.Configure<RateLimitOptions>(
+    builder.Configuration.GetSection(RateLimitOptions.SectionName));
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── JWT ─────────────────────────────────────────────────────────────────────
+builder.Services.AddSingleton<IJwtService, JwtService>();
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var jwtCfg = builder.Configuration.GetSection("Jwt");
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer           = true,
+            ValidateAudience         = true,
+            ValidateLifetime         = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer              = jwtCfg["Issuer"],
+            ValidAudience            = jwtCfg["Audience"],
+            IssuerSigningKey         = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtCfg["SecretKey"]!))
+        };
+    });
+// ─────────────────────────────────────────────────────────────────────────────
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular",
-        policy => policy.WithOrigins("http://localhost:5000") 
+        policy => policy.WithOrigins("http://localhost:5000", "http://localhost:4200")
                         .AllowAnyMethod()
-                        .AllowAnyHeader());
+                        .AllowAnyHeader()
+                        .AllowCredentials());
 });
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -95,6 +140,7 @@ builder.Services.AddOpenApi();
 builder.Host.UseNLog();
 var app = builder.Build();
 app.UseErrorMiddleware();
+//app.UseRateLimiting();   // ← fixed-window rate limiter (early — before routing & auth)
 app.UseRatingMiddleware();
 
 
@@ -114,10 +160,10 @@ app.UseCors("AllowAngular");
 
 app.UseHttpsRedirection();
 
-
-
 app.UseStaticFiles();
 
+app.UseCookieToken();   // reads JWT from access_token cookie → Authorization header
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

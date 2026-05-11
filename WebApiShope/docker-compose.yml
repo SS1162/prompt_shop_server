@@ -1,0 +1,112 @@
+services:
+
+  # ── SQL Server 2022 ──────────────────────────────────────────────────────────
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: webapishope_sqlserver
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${SA_PASSWORD}"
+      MSSQL_PID: Developer           # free Developer edition
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$SA_PASSWORD"
+          -Q "SELECT 1" -C -l 5 || exit 1
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  # ── Redis 7 ─────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: webapishope_redis
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+    command: >-
+      sh -c 'escaped_pw=$$(printf "%s" "$$REDIS_PASSWORD" | sed -e "s/[\\/&|]/\\\\&/g"); sed "s|__REDIS_PASSWORD__|$${escaped_pw}|g" /usr/local/etc/redis/redis.conf.template > /tmp/redis.conf && exec redis-server /tmp/redis.conf'
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./redis/redis.conf.template:/usr/local/etc/redis/redis.conf.template:ro
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - redis-cli -a "$$REDIS_PASSWORD" ping | grep -q PONG
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── ASP.NET Core Web API ─────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Target the "final" stage so that intermediate SDK stages are not kept.
+      target: final
+    image: webapishope/api:dev
+    container_name: webapishope_api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # ── Runtime environment ──────────────────────────────────────────────────
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+
+      # ── Database ─────────────────────────────────────────────────────────────
+      # .NET configuration uses __ as a hierarchy separator in env vars.
+      ConnectionStrings__DefaultConnection: >-
+        Server=sqlserver,1433;
+        Database=MyShop330683525;
+        User Id=sa;
+        Password=${SA_PASSWORD};
+        TrustServerCertificate=true;
+        MultipleActiveResultSets=true;
+
+      # ── Redis rate limiting ──────────────────────────────────────────────────
+      Redis__ConnectionString: redis:6379,password=${REDIS_PASSWORD}
+
+      RateLimiting__AnonymousLimit: "60"
+      RateLimiting__AuthenticatedLimit: "200"
+      RateLimiting__WindowSeconds: "60"
+
+      # ── Gemini AI ────────────────────────────────────────────────────────────
+      GEMINI_API_KEY: "${GEMINI_API_KEY}"
+
+      # ── PayPal (sandbox) ─────────────────────────────────────────────────────
+      PayPal__ClientId: "${PAYPAL_CLIENT_ID}"
+      PayPal__ClientSecret: "${PAYPAL_CLIENT_SECRET}"
+      PayPal__BaseUrl: https://api-m.sandbox.paypal.com
+
+      # ── Admin seed account ───────────────────────────────────────────────────
+      AdminName: "${ADMIN_NAME}"
+      AdminPassword: "${ADMIN_PASSWORD}"
+
+      # ── Static image base URLs (served by Kestrel) ───────────────────────────
+      IMAGES_CATEGORIES_PATH: http://localhost:8080/wwwroot/images/
+      IMAGES_REVIEWS_PATH: http://localhost:8080/wwwroot/reviews/
+
+    volumes:
+      # Persist uploaded images between container restarts.
+      - api_images:/app/wwwroot/images
+      - api_reviews:/app/wwwroot/reviews
+
+volumes:
+  sqlserver_data:
+  redis_data:
+  api_images:
+  api_reviews:

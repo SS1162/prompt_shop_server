@@ -1,23 +1,21 @@
 using AutoMapper;
 using DTO;
 using Entities;
-using Microsoft.EntityFrameworkCore;
 using Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 namespace Services
 {
     public class ProductsServise : IProductsServise
     {
-
         private readonly IProductsReposetory _productsReposetory;
         private readonly IMapper _mapper;
         private readonly ICategoriesReposetory _categoriesReposetory;
         private readonly ICartsReposetory _cartReposetory;
         private readonly IOrdersReposetory _ordersReposetory;
+
         public ProductsServise(IProductsReposetory productsReposetory,
         IMapper mapper, ICategoriesReposetory categoriesReposetory, ICartsReposetory cartReposetory, IOrdersReposetory ordersReposetory)
         {
@@ -142,6 +140,7 @@ namespace Services
             {
                 return Resulte<ProductDTO>.Failure("Product not found");
             }
+
             return Resulte<ProductDTO>.Success(_mapper.Map<ProductDTO>(product));
         }
     }

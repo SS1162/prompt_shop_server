@@ -2,6 +2,7 @@
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using WebApiShope.Attributes;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -46,6 +47,7 @@ namespace WebApiShope.Controllers
         {
         }
 
+        [AdminOnly]
         [HttpPut("admin/{id}")]
         public async Task<ActionResult> UpdateByMng(long id, SiteTypeDTO dto)
         {
@@ -58,6 +60,7 @@ namespace WebApiShope.Controllers
             return Ok();    
         }
 
+        [AdminOnly]
         [HttpDelete("admin/{id}")]
         async public Task<ActionResult> Delete(long id)
         {

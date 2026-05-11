@@ -2,6 +2,7 @@
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using WebApiShope.Attributes;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -35,6 +36,7 @@ namespace WebApiShope.Controllers
 
     
         // POST api/<ProductsController>
+        [AdminOnly]
         [HttpPost]
         async public Task<ActionResult<ProductDTO>> AddProduct([FromBody] AddProductDTO product)
         {
@@ -49,6 +51,7 @@ namespace WebApiShope.Controllers
         }
 
         // PUT api/<ProductsController>/5
+        [AdminOnly]
         [HttpPut("{id}")]
         async public Task<ActionResult> UpdateProduct(long id, [FromBody] UpdateProductDTO productToUpdate )
         {
@@ -61,6 +64,7 @@ namespace WebApiShope.Controllers
         }
 
         // DELETE api/<ProductsController>/5
+        [AdminOnly]
         [HttpDelete("{id}")]
         async public Task<ActionResult> DeleteProduct(long id)
         {

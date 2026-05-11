@@ -2,6 +2,7 @@ using DTO;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using System.Reflection.Metadata.Ecma335;
+using WebApiShope.Attributes;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApiShope.Controllers
@@ -30,6 +31,7 @@ namespace WebApiShope.Controllers
 
 
         // POST api/<MainCategoriesController>
+        [AdminOnly]
         [HttpPost("admin")]
         async public Task<ActionResult<MainCategoriesDTO>> AddMainCategory([FromBody] ManegerMainCategoryDTO manegerMainCategory)
         {
@@ -38,6 +40,7 @@ namespace WebApiShope.Controllers
         }
 
         // PUT api/<MainCategoriesController>/5
+        [AdminOnly]
         [HttpPut("admin/{id}")]
         async public Task<ActionResult> UpdateMainCategory(long id, [FromBody] MainCategoriesDTO mainCategory)
         {
@@ -50,6 +53,7 @@ namespace WebApiShope.Controllers
         }
 
         // DELETE api/<MainCategoriesController>/5
+        [AdminOnly]
         [HttpDelete("admin/{id}")]
         async public Task<ActionResult> Delete(long id)
         {

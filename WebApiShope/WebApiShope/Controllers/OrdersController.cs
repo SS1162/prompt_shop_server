@@ -1,7 +1,9 @@
 ﻿using Azure;
 using DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using WebApiShope.Attributes;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,6 +21,7 @@ namespace WebApiShope.Controllers
             this._createPrompt = createPrompt;
         }
         // GET: api/<OrdersController>
+        [Authorize]
         [HttpGet("{orderId}/orderItems")]
         async public Task<ActionResult<IEnumerable<OrderItemDTO>>> GetOrdersItems([FromBody] long orderId)
         {
@@ -34,6 +37,7 @@ namespace WebApiShope.Controllers
             return Ok(reaspone.Data);
         }
         // GET api/<OrdersController>/5
+        [Authorize]
         [HttpGet("userID/{id}")]
         public async Task<ActionResult<IEnumerable<FullOrderDTO>>> GetOrderByUserID(long id)
         {
@@ -47,6 +51,7 @@ namespace WebApiShope.Controllers
 
         // GET api/<OrdersController>/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<OrderDetielsDTO>> GetByIDOrdersDitels(long id)
         {
             OrderDetielsDTO order = await _ordersServise.GetByIdOrderServise(id);
@@ -60,6 +65,7 @@ namespace WebApiShope.Controllers
 
        
         //for admin only
+        [AdminOnly]
         [HttpGet("admin")]
         public async Task<ActionResult<IEnumerable<FullOrderDTO>>> GetAllOrders()
         {
@@ -73,6 +79,7 @@ namespace WebApiShope.Controllers
 
         // POST api/<OrdersController>
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<FullOrderDTO>> AddOrder([FromBody] OrdersDTO order)
         {
 
@@ -87,6 +94,7 @@ namespace WebApiShope.Controllers
         }
 
         // POST api/<OrdersController>/5/prompt
+        [Authorize]
         [HttpPost("{orderId}/prompt")]
         public async Task<ActionResult<string>> GeneratePrompt(long orderId)
         {
@@ -96,6 +104,7 @@ namespace WebApiShope.Controllers
         }
 
         // PUT api/<OrdersController>/5
+        [AdminOnly]
         [HttpPut("{id}")]
         async public Task<ActionResult> UpdateStatuse(long id, [FromBody] FullOrderDTO order)
         {

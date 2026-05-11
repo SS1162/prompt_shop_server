@@ -113,7 +113,10 @@ namespace Services
             CreateMap<AddBasicSiteDTO, BasicSite>()
              .ForMember(
             dest => dest.BasicSitesPlatforms,
-            opts => opts.MapFrom(src => src.PlatformID));
+            opts => opts.MapFrom(src => src.PlatformID))
+             .ForMember(
+            dest => dest.UserDescription,
+            opts => opts.MapFrom(src => src.UserDescreption));
 
 
             CreateMap<UpdateBasicSiteDTO, BasicSite>()

@@ -1,0 +1,33 @@
+## ── .NET build artefacts ──────────────────────────────────────────────────────
+**/bin/
+**/obj/
+
+## ── IDE & OS files ────────────────────────────────────────────────────────────
+**/.vs/
+**/.vscode/
+**/.idea/
+**/*.user
+**/*.suo
+
+## ── Git ────────────────────────────────────────────────────────────────────────
+.git/
+.gitignore
+
+## ── Docker files (no need to copy them into the image) ───────────────────────
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+## ── Secrets & local configuration ────────────────────────────────────────────
+## Never bake real secrets into images; pass them via env vars at runtime.
+.env
+*.env
+appsettings.Development.json
+
+## ── Test results & coverage ──────────────────────────────────────────────────
+**/TestResults/
+**/*.trx
+**/*.coverage
+
+## ── Other ─────────────────────────────────────────────────────────────────────
+README.md

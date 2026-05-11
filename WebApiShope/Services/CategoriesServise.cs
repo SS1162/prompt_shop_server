@@ -2,6 +2,7 @@ using AutoMapper;
 using DTO;
 using Entities;
 using Google.GenAI.Types;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Repositories;
@@ -23,15 +24,19 @@ namespace Services
         private readonly IMainCategoriesReposetory _mainCategoriesReposetory;
         private readonly IProductsReposetory _productsReposetory;
         private readonly IConfiguration _config;
+        private readonly Igemini _gemini;
+        private readonly IWebHostEnvironment _env;
         public CategoriesServise(ICategoriesReposetory categoriesReposetory, IMapper mapper,
               IMainCategoriesReposetory mainCategoriesReposetory, IProductsReposetory productsReposetory,
-              IConfiguration config)
+              IConfiguration config, IWebHostEnvironment env)
         {
             this._mapper = mapper;
             this._categoriesReposetory = categoriesReposetory;
             this._mainCategoriesReposetory = mainCategoriesReposetory;
             this._productsReposetory = productsReposetory;
-            this._config=config;    
+            this._config = config;
+            _env = env;
+       
         }
 
         async public Task<Resulte<ResponePage<CategoryDTO>>> GetCategoriesServise(int numberOfPages, long mainCategoryID, int pageSize, string? search)
@@ -81,8 +86,12 @@ namespace Services
                 Resulte<CategoryDTO>.Failure("Category id isn't insist");
             }
             Category categoryToReposetory = _mapper.Map<Category>(categoryToUpdate);
-            //למלא פרומפט עם gemini
-            categoryToReposetory.CategoryPrompt = "vfsghhfg";
+            Resulte<string> respone = await _gemini.RunGeminiForFillCategory(categoryToUpdate.CategoryDescreption, checkIfMainCategoryInsist.MainCategoryName);
+            if (!respone.IsSuccess)
+            {
+                return Resulte<CategoryDTO>.Failure("not secssed to create the prompt ");
+            }
+            categoryToReposetory.CategoryPrompt = respone.Data;
             await _categoriesReposetory.UpdateCategoriesReposetory(id, categoryToReposetory);
             if (System.IO.File.Exists(checkIfCategoryInsist.ImgUrl))
             {
@@ -106,9 +115,9 @@ namespace Services
                 {
                     Quality = 75
                 };
-
-                string fullPath = _config.GetValue<string>("IMAGES_CATEGORIES_PATH") + categoryToUpdate.ImgUrl + ".jpeg";
-                await image.SaveAsync(fullPath, encoder);
+                string physicalPath = Path.Combine(_env.WebRootPath, "images", categoryToReposetory.CategoryName+".jpeg");
+                await image.SaveAsync(physicalPath, encoder);
+               
 
             }
 
@@ -122,7 +131,7 @@ namespace Services
             MainCategory? checkIfMainCategoryInsist = await _mainCategoriesReposetory.GetByIdMainCategoriesReposetoty(categoryToAdd.MainCategoryID);
             if (checkIfMainCategoryInsist == null)
             {
-                Resulte<CategoryDTO>.Failure("Main category id isn't insist");
+                return Resulte<CategoryDTO>.Failure("Main category id isn't insist");
             }
             Category categoryToReposetory = _mapper.Map<Category>(categoryToAdd);
 
@@ -143,15 +152,19 @@ namespace Services
                 {
                     Quality = 75
                 };
-
-                string fullPath = _config.GetValue<string>("IMAGES_CATEGORIES_PATH") + categoryToAdd.ImgUrl+".jpeg";
-                await image.SaveAsync(fullPath, encoder);
+                string physicalPath = Path.Combine(_env.WebRootPath, "images", categoryToReposetory.CategoryName + ".jpeg");
+                await image.SaveAsync(physicalPath, encoder);
 
 
             }
             categoryToReposetory.ImgUrl =  _config.GetValue<string>("IMAGES_CATEGORIES_PATH")+ categoryToReposetory.ImgUrl ;
-            //למלא פרומפט עם gemini
-            categoryToReposetory.CategoryPrompt = "gfasdfghfh";
+          
+            Resulte<string> respone = await _gemini.RunGeminiForFillCategory(categoryToAdd.CategoryDescreption, checkIfMainCategoryInsist.MainCategoryName);
+            if(!respone.IsSuccess)
+            {
+                return Resulte<CategoryDTO>.Failure("not secssed to create the prompt ");
+            }
+            categoryToReposetory.CategoryPrompt = respone.Data;
             Category categoryFromReposetory = await _categoriesReposetory.AddCategoriesReposetory(categoryToReposetory);
 
             return Resulte<CategoryDTO>.Success(_mapper.Map<CategoryDTO>(categoryFromReposetory));

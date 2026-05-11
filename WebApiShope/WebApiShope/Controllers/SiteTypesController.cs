@@ -1,6 +1,8 @@
-using DTO;
+﻿using DTO;
+using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using WebApiShope.Attributes;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -45,7 +47,8 @@ namespace WebApiShope.Controllers
         {
         }
 
-        [HttpPut("{id}/manager")]
+        [AdminOnly]
+        [HttpPut("admin/{id}")]
         public async Task<ActionResult> UpdateByMng(long id, SiteTypeDTO dto)
         {
 
@@ -56,6 +59,26 @@ namespace WebApiShope.Controllers
             }
             return Ok();    
         }
+
+        [AdminOnly]
+        [HttpDelete("admin/{id}")]
+        async public Task<ActionResult> Delete(long id)
+        {
+            Resulte<SiteTypeDTO> respone = await _siteTypesService.DeleteSiteTypeServise(id);
+            if (!respone.IsSuccess)
+            {
+                return BadRequest(respone.ErrorMessage);
+            }
+            return BadRequest();
+        }
+
+        //// POST api/<MainCategoriesController>
+        //[HttpPost("admin")]
+        //async public Task<ActionResult<SiteTypeDTO>> AddSiteType([FromBody] SiteTypeDTO siteType)
+        //{
+        //    SiteTypeDTO siteType = await _mainCategoriesServise.AddMainCategoriesServises(manegerMainCategory);
+        //    return CreatedAtAction(nameof(Get), new { id = mainCategoryConstructedObject.MainCategoryID }, mainCategoryConstructedObject);
+        //}
 
 
     }

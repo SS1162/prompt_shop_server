@@ -1,5 +1,6 @@
 ﻿using DTO;
 using Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using NLog.Web;
@@ -18,12 +19,15 @@ namespace WebApiShope.Controllers
         private readonly IUsersService _usersService;
         private readonly IConfiguration _configuration;
         private readonly ILogger<UsersController> _logger;
+        private readonly IJwtService _jwtService;
 
-        public UsersController(IUsersService usersService, ILogger<UsersController> logger, IConfiguration configuration)
+        public UsersController(IUsersService usersService, ILogger<UsersController> logger,
+            IConfiguration configuration, IJwtService jwtService)
         {
-            this._usersService = usersService;
-            this._configuration = configuration;
-            this._logger = logger;  
+            _usersService   = usersService;
+            _configuration  = configuration;
+            _logger         = logger;
+            _jwtService     = jwtService;
         }
 
         [HttpGet]
@@ -62,16 +66,21 @@ namespace WebApiShope.Controllers
         {
             UserDTO user = await _usersService.LoginUsersService(logInUser);
             if (user == null)
-            {
                 return Unauthorized();
 
-            }
-            else
-            {
-                _logger.LogInformation($"login with:user name:{user.UserName} user firs name:{user.FirstName} user las name:{user.LastName},user phone:{user.Phone},user ID:{user.UserID}");
-                return CreatedAtAction(nameof(GetUserById), new { id = user.UserID}, user);
-            }
+            string token = _jwtService.GenerateToken(user, logInUser.UserName, logInUser.UserPassward);
 
+            int expiresHours = int.Parse(_configuration["Jwt:ExpiresHours"] ?? "6");
+            Response.Cookies.Append("access_token", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure   = true,
+                SameSite = SameSiteMode.None,
+                Expires  = DateTimeOffset.UtcNow.AddHours(expiresHours)
+            });
+
+            _logger.LogInformation("Login: {UserName} ID:{UserID}", user.UserName, user.UserID);
+            return CreatedAtAction(nameof(GetUserById), new { id = user.UserID }, user);
         }
 
         [HttpPost("signInWithGoogle")]
@@ -93,6 +102,7 @@ namespace WebApiShope.Controllers
         }
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
+        [Authorize]
         async public Task<ActionResult> Put(long id, [FromBody] UpdateUserDTO user)
         {
 
@@ -105,7 +115,14 @@ namespace WebApiShope.Controllers
         }
 
 
-         [HttpGet("isAdmin/{id}")]
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("access_token");
+            return NoContent();
+        }
+
+        [HttpGet("isAdmin/{id}")]
         public async Task<ActionResult<UserDTO>> CheckIsAdmin( long id)
         {
           LoginUserDTO logInUser =new LoginUserDTO(_configuration["AdminName"], _configuration["AdminPassword"]);

@@ -8,8 +8,8 @@ namespace WebApiShope.MiddleWare
     public class ErrorMiddleware
     {
         private readonly RequestDelegate _next;
-
         private readonly ILogger<ErrorMiddleware> _logger;
+        
         public ErrorMiddleware(RequestDelegate next, ILogger<ErrorMiddleware> logger)
         {
             _next = next;
@@ -18,18 +18,25 @@ namespace WebApiShope.MiddleWare
 
         public async Task Invoke(HttpContext httpContext)
         {
-        
-                try
+            try
             {
-                 await _next(httpContext);
+                await _next(httpContext);
             }
-            catch(Exception e)
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Unhandled exception for {Method} {Path}",
+                    httpContext.Request.Method, httpContext.Request.Path);
 
-            {
-                httpContext.Response.StatusCode = 500;
-                _logger.LogError($"{e.Message}  {e.StackTrace}");
+                if (!httpContext.Response.HasStarted)
+                {
+                    httpContext.Response.StatusCode  = 500;
+                    httpContext.Response.ContentType = "application/json";
+
+                    const string body = "{\"status\":500,\"error\":\"Internal Server Error\"}";
+
+                    await httpContext.Response.WriteAsync(body);
+                }
             }
-        
         }
     }
 

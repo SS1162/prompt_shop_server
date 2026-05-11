@@ -7,5 +7,7 @@ namespace Repositories
         Task<IEnumerable<SiteType>?> GetAllSiteTypesReposetory();
         Task<SiteType?> GetSiteTypeByIdReposetory(long id);
         Task UpdateSiteTypeByMngReposetory(long id, SiteType siteType);
+
+        Task DeleteSiteTypeByMngReposetory(long id);
     }
 }

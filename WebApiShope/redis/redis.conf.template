@@ -1,0 +1,4 @@
+save 60 1
+loglevel warning
+appendonly yes
+requirepass __REDIS_PASSWORD__

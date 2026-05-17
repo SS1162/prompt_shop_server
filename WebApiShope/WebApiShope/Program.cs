@@ -49,6 +49,7 @@ builder.Services.AddScoped<IRatingsServise, RatingsServise>();
 builder.Services.AddScoped<ICartsReposetory, CartsReposetory>();
 
 builder.Services.AddScoped<IOrdersServise, OrdersServise>();
+builder.Services.AddSingleton<IKafkaProducerService, KafkaProducerService>();
 
 builder.Services.AddScoped<IOrdersReposetory, OrdersReposetory>();
 

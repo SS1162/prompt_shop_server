@@ -45,6 +45,60 @@ services:
       timeout: 5s
       retries: 5
 
+  # ── Kafka (KRaft, single-node) ─────────────────────────────────────────────
+  kafka:
+    image: bitnami/kafka:3.7
+    container_name: webapishope_kafka
+    restart: unless-stopped
+    environment:
+      KAFKA_ENABLE_KRAFT: "yes"
+      KAFKA_CFG_NODE_ID: "1"
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
+      KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+      KAFKA_KRAFT_CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+    ports:
+      - "9092:9092"
+    volumes:
+      - kafka_data:/bitnami/kafka
+
+  # ── Kafka UI ────────────────────────────────────────────────────────────────
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: webapishope_kafka_ui
+    restart: unless-stopped
+    depends_on:
+      - kafka
+    ports:
+      - "8081:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+
+  # ── Kafka Consumer Server ──────────────────────────────────────────────────
+  kafka-consumer:
+    build:
+      context: .
+      dockerfile: KafkaConsumer/Dockerfile
+    image: webapishope/kafka-consumer:dev
+    container_name: webapishope_kafka_consumer
+    restart: unless-stopped
+    depends_on:
+      - kafka
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Kafka__BootstrapServers: kafka:9092
+      Kafka__Topic: my-app-topic
+      Kafka__GroupId: webapishope-kafka-consumer
+
   # ── ASP.NET Core Web API ─────────────────────────────────────────────────────
   api:
     build:
@@ -108,5 +162,6 @@ services:
 volumes:
   sqlserver_data:
   redis_data:
+  kafka_data:
   api_images:
   api_reviews:

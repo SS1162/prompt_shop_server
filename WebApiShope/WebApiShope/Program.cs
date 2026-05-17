@@ -16,6 +16,7 @@ builder.Services.AddScoped<IUsersReposetory, UsersReposetory>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 
 builder.Services.AddScoped<IPasswordsService,PasswordsService>();
+builder.Services.AddScoped<IPasswordHashingService, PasswordHashingService>();
 
 builder.Services.AddScoped<IPlatformsReposetory, PlatformsReposetory>();
 

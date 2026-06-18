@@ -11,6 +11,19 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Use environment variables as the primary runtime configuration source
+// (for Elastic Beanstalk and other cloud deployments).
+// appsettings files are loaded first so environment variables can override them in production.
+builder.Configuration.Sources.Clear();
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddEnvironmentVariables();
+if (args.Length > 0)
+{
+    builder.Configuration.AddCommandLine(args);
+}
+
 builder.Services.AddScoped<IUsersReposetory, UsersReposetory>();
 
 builder.Services.AddScoped<IUsersService, UsersService>();
@@ -30,6 +43,10 @@ builder.Services.AddScoped<IGeminiPromptsReposetory, GeminiPromptsReposetory>();
 
 builder.Services.AddScoped<ICreatePrompt, CreatePrompt>();
 
+builder.Services.AddHttpClient<ChatBotServise>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ChatBot:BaseUrl"] ?? "http://localhost:8001/");
+});
 builder.Services.AddScoped<IChatBotServise, ChatBotServise>();
 
 builder.Services.AddScoped<IGeminiServise, GeminiServise>();
@@ -121,7 +138,7 @@ builder.Services
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular",
-        policy => policy.WithOrigins("http://localhost:5000", "http://localhost:4200")
+        policy => policy.WithOrigins("https://prompt-shop-client-testpnoren.s3-website-us-east-1.amazonaws.com/", "http://prompt-shop-client-testpnoren.s3-website-us-east-1.amazonaws.com")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials());

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Services
 {
@@ -20,11 +21,13 @@ namespace Services
         private readonly IProductsReposetory _productsReposetory;
         private readonly IStatusesReposetory _statusesReposetory;
         private readonly ICreatePrompt _createPrompt;
+        private readonly IKafkaProducerService _kafkaProducerService;
 
 
         public OrdersServise(IOrdersReposetory orderRepository, IMapper mapper,
             IUsersReposetory usersReposetory, IBasicSitesReposetory basicSitesReposetory,
-            IProductsReposetory productsReposetory, IStatusesReposetory statusesReposetory, ICreatePrompt createPrompt)
+            IProductsReposetory productsReposetory, IStatusesReposetory statusesReposetory, ICreatePrompt createPrompt,
+            IKafkaProducerService kafkaProducerService)
         {
             this._orderRepository = orderRepository;
             this._mapper = mapper;
@@ -33,6 +36,7 @@ namespace Services
             this._productsReposetory = productsReposetory;
             this._statusesReposetory = statusesReposetory;
             _createPrompt = createPrompt;
+            _kafkaProducerService = kafkaProducerService;
         }
 
         public async Task<OrderDetielsDTO> GetByIdOrderServise(long id)
@@ -145,6 +149,21 @@ namespace Services
 
             Order orderToReposetory = _mapper.Map<Order>(order);
             await _orderRepository.UpdateStatusReposetory(id, orderToReposetory);
+
+            var kafkaMessage = new
+            {
+                OrderId = checkIfIOrderinsist.OrderId,
+                OrderDate = checkIfIOrderinsist.OrderDate,
+                OrderSum = checkIfIOrderinsist.OrderSum,
+                UserId = checkIfIOrderinsist.UserId,
+                BasicId = checkIfIOrderinsist.BasicId,
+                StatusName = order.StatusName,
+                ReviewId = checkIfIOrderinsist.ReviewId,
+                ClosedAtUtc = DateTime.UtcNow
+            };
+
+            await _kafkaProducerService.SendMessageAsync(JsonSerializer.Serialize(kafkaMessage));
+
             return Resulte<FullOrderDTO>.Success(null);
         }
 

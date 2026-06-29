@@ -9,11 +9,14 @@ namespace Services
         private readonly IUsersReposetory _usersReposetory;
         private readonly IMapper _mapper;
         private readonly IPasswordsService _passwordsService;
-        public UsersService(IUsersReposetory repositoriesUsers, IMapper mapper, IPasswordsService passwordsService)
+        private readonly IPasswordHashingService _passwordHashingService;
+        public UsersService(IUsersReposetory repositoriesUsers, IMapper mapper, IPasswordsService passwordsService,
+            IPasswordHashingService passwordHashingService)
         {
             this._usersReposetory = repositoriesUsers;
             this._mapper = mapper;
             this._passwordsService = passwordsService;
+            this._passwordHashingService = passwordHashingService;
         }
         public async Task<UserDTO> GetByIDUsersService(long id)
         {
@@ -34,6 +37,7 @@ namespace Services
 
             User userToReposetory = _mapper.Map<User>(registerUser);
             userToReposetory.UserName = userToReposetory.UserName.ToLower();
+            userToReposetory.Password = _passwordHashingService.HashPassword(registerUser.UserPassword);
             bool flag = await _usersReposetory.CheckIfUsersInsistalrady(userToReposetory.UserName);
             if (!flag)
                 return Resulte<UserDTO>.Failure("The user insist alrady");
@@ -62,6 +66,18 @@ namespace Services
             userToRposetory.UserName = userToRposetory.UserName.ToLower();
 
             User? userFromRposetory = await _usersReposetory.LoginUsersRepositories(userToRposetory);
+            if (userFromRposetory == null)
+            {
+                return null;
+            }
+
+            bool isPasswordValid = _passwordHashingService.VerifyPassword(logInUser.UserPassward, userFromRposetory.Password)
+                || userFromRposetory.Password == logInUser.UserPassward;
+
+            if (!isPasswordValid)
+            {
+                return null;
+            }
 
             UserDTO userToConroller = _mapper.Map<UserDTO>(userFromRposetory);
 
@@ -98,6 +114,10 @@ namespace Services
             if(userToUpdate.Password==null)
             {
                 userToRposetory.Password = checkIfUserExist.Password;
+            }
+            else
+            {
+                userToRposetory.Password = _passwordHashingService.HashPassword(userToUpdate.Password);
             }
             User? checkUserValidtion = await _usersReposetory.GetByIDUsersRepositories(id);
             if (checkUserValidtion == null)

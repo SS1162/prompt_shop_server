@@ -55,8 +55,7 @@ namespace Repositories
 
         public async Task<User?> LoginUsersRepositories(User LogInUser)
         {
-            var user = await _MyShop330683525Context.Users.AsNoTracking().FirstOrDefaultAsync(x => LogInUser.UserName == x.UserName &&
-            LogInUser.Password == x.Password);
+            var user = await _MyShop330683525Context.Users.AsNoTracking().FirstOrDefaultAsync(x => LogInUser.UserName == x.UserName);
             return user;
         }
 

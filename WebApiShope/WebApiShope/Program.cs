@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
@@ -159,7 +159,7 @@ builder.Services.AddOpenApi();
 builder.Host.UseNLog();
 var app = builder.Build();
 app.UseErrorMiddleware();
-//app.UseRateLimiting();   // ← fixed-window rate limiter (early — before routing & auth)
+app.UseRateLimiting();
 app.UseRatingMiddleware();
 
 

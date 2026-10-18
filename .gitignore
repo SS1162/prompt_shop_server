@@ -484,3 +484,16 @@ $RECYCLE.BIN/
 *.swp
 appsettings.json
 appsettings.*.json
+
+# ── Project additions ───────────────────────────────────────────────────────
+# Keep every local env file out of git, but keep the documented template
+.env.*
+!.env.example
+
+# Binaries and installers should never be committed
+*.exe
+*.dll
+
+# Temp files
+*.temp
+*.bak
